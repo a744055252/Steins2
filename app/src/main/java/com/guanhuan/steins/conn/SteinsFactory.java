@@ -22,6 +22,7 @@ public class SteinsFactory {
         }
     }
 
+    
     public static boolean isDebug(){
         return isDebug;
     }

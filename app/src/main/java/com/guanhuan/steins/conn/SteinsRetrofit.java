@@ -24,6 +24,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -40,6 +41,10 @@ public class SteinsRetrofit {
 
     final UserApi userService;
 
+    private OkHttpClient client;
+
+    private Interceptor authInterceptor;
+
     final static Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd HH:mm:ss")
             .serializeNulls()
@@ -53,10 +58,10 @@ public class SteinsRetrofit {
             httpClient.addInterceptor(logging);
         }
         httpClient.connectTimeout(12, TimeUnit.SECONDS);
-        OkHttpClient client = httpClient.build();
+        client = httpClient.build();
 
         Retrofit.Builder builder = new Retrofit.Builder();
-        builder.baseUrl("http://192.168.8.106/steins")
+        builder.baseUrl("http://192.168.8.113:8080/")
             .client(client)
             .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
             .addConverterFactory(GsonConverterFactory.create(gson));
@@ -67,5 +72,25 @@ public class SteinsRetrofit {
 
     public UserApi getUserService() {
         return userService;
+    }
+
+    public void setInterceptors(Interceptor interceptor){
+        client.interceptors().add(interceptor);
+    }
+
+    public void removeInterceptors(Interceptor interceptor){
+        client.interceptors().remove(interceptor);
+    }
+
+    public void setAuthInterceptor(Interceptor interceptor){
+        this.authInterceptor = interceptor;
+        this.setInterceptors(interceptor);
+    }
+
+    public void removeAuthInterceptor(){
+        if(this.authInterceptor == null){
+            throw new NullPointerException("AuthInterceptor is empty!");
+        }
+        this.removeInterceptors(this.authInterceptor);
     }
 }

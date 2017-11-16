@@ -19,7 +19,12 @@
 
 package com.guanhuan.steins.conn;
 
+import com.guanhuan.steins.data.entity.ResultModel;
+import com.guanhuan.steins.data.entity.User;
+
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import rx.Observable;
@@ -29,9 +34,12 @@ import rx.Observable;
  * @Auther: guanhuan_li
  * @Date: 16:15 2017/11/15
  */
-interface UserApi {
-    @Headers({ "Content-Type: application/json" })
+public interface UserApi {
+    @FormUrlEncoded
     @POST("User/token")
-    Observable<String> getToken(@Field("account") String account,
-                                @Field("password") String password);
+    Observable<ResultModel<String>> getToken(@Field("account") String account,
+                                     @Field("password") String password);
+
+    @GET("User/user")
+    Observable<ResultModel<User>> getUser();
 }
