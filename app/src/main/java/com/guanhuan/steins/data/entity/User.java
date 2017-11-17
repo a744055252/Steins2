@@ -6,6 +6,8 @@ import com.litesuits.orm.db.annotation.Table;
 
 import java.io.Serializable;
 
+import lombok.ToString;
+
 /**
  * Created by 74405 on 2017/11/15.
  */

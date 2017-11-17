@@ -10,6 +10,7 @@ import com.guanhuan.steins.conn.UserApi;
 import com.guanhuan.steins.data.entity.ResultModel;
 import com.guanhuan.steins.data.entity.User;
 import com.guanhuan.steins.login.LoginLoader;
+import com.guanhuan.steins.login.UserLoader;
 import com.guanhuan.steins.util.Toasts;
 
 import rx.Observable;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private LoginLoader loginLoader;
+    private UserLoader userLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         loginLoader = new LoginLoader();
         loginLoader.login("a744055252", "11111111");
+        userLoader = new UserLoader();
+        userLoader.getLoginUser();
     }
 
 

@@ -10,21 +10,26 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by zhouwei on 16/11/9.
+ * Created by 74405 on 2017/11/17.
  */
 
-public class RetrofitServiceManager {
+public class InterRetrofitServiceManager {
     private static final int DEFAULT_TIME_OUT = 5;//超时时间 5s
     private static final int DEFAULT_READ_TIME_OUT = 10;
-    private Retrofit mRetrofit;
-    private OkHttpClient client;
+    private final Retrofit mRetrofit;
+    private final OkHttpClient client;
+    private final HttpCommonInterceptor interceptor;
     /** 为请求增加authorization 消息头 */
-    private RetrofitServiceManager(){
+    public InterRetrofitServiceManager(HttpCommonInterceptor interceptor){
+
+        this.interceptor = interceptor;
+
         // 创建 OKHttpClient
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.connectTimeout(DEFAULT_TIME_OUT, TimeUnit.SECONDS);//连接超时时间
-        builder.writeTimeout(DEFAULT_READ_TIME_OUT, TimeUnit.SECONDS);//写操作 超时时间
-        builder.readTimeout(DEFAULT_READ_TIME_OUT, TimeUnit.SECONDS);//读操作超时时间
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+            .connectTimeout(DEFAULT_TIME_OUT, TimeUnit.SECONDS)//连接超时时间
+            .writeTimeout(DEFAULT_READ_TIME_OUT, TimeUnit.SECONDS)//写操作 超时时间
+            .readTimeout(DEFAULT_READ_TIME_OUT, TimeUnit.SECONDS)//读操作超时时间
+            .addNetworkInterceptor(interceptor);//添加消息头过滤器
         client = builder.build();
 
         // 创建Retrofit
@@ -36,21 +41,6 @@ public class RetrofitServiceManager {
                 .build();
     }
 
-    private static class SingletonHolder{
-        private static final RetrofitServiceManager INSTANCE = new RetrofitServiceManager();
-    }
-
-
-    /**
-     * 获取RetrofitServiceManager
-     * @return
-     */
-    public static RetrofitServiceManager getInstance(){
-        return SingletonHolder.INSTANCE;
-    }
-
-
-
     /**
      * 获取对应的Service
      * @param service Service 的 class
@@ -60,5 +50,4 @@ public class RetrofitServiceManager {
     public <T> T create(Class<T> service){
         return mRetrofit.create(service);
     }
-
 }

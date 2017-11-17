@@ -2,15 +2,16 @@ package com.guanhuan.steins.login;
 
 import android.util.Log;
 
+import com.guanhuan.steins.config.Constants;
 import com.guanhuan.steins.data.entity.ResultModel;
 import com.guanhuan.steins.http.HttpCommonInterceptor;
 import com.guanhuan.steins.http.ObjectLoader;
 import com.guanhuan.steins.http.RetrofitServiceManager;
+import com.guanhuan.steins.http.RetrofitServiceSingleton;
 
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
-import retrofit2.http.Url;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -47,7 +48,10 @@ public class LoginLoader extends ObjectLoader {
                             public void onNext(ResultModel<String> result) {
                                 Log.i(TAG, "Token:"+result.getContent());
                                 //往请求前添加一个身份验证token
-                                RetrofitServiceManager.getInstance().setAuthInterceptor(result.getContent());
+                                HttpCommonInterceptor tokenInterceptor = new HttpCommonInterceptor.Builder()
+                                        .addHeaderParams(Constants.AUTHORIZATION, result.getContent())
+                                        .build();
+                                RetrofitServiceSingleton.getInstance(tokenInterceptor);
                             }
                         }
                 );
