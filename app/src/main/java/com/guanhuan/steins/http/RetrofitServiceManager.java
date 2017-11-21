@@ -36,6 +36,7 @@ public class RetrofitServiceManager {
                 .build();
     }
 
+
     private static class SingletonHolder{
         private static final RetrofitServiceManager INSTANCE = new RetrofitServiceManager();
     }

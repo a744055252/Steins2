@@ -2,12 +2,11 @@ package com.guanhuan.steins.login;
 
 import android.util.Log;
 
-import com.guanhuan.steins.config.Constants;
+import com.guanhuan.steins.App;
 import com.guanhuan.steins.data.entity.ResultModel;
-import com.guanhuan.steins.http.HttpCommonInterceptor;
 import com.guanhuan.steins.http.ObjectLoader;
 import com.guanhuan.steins.http.RetrofitServiceManager;
-import com.guanhuan.steins.http.RetrofitServiceSingleton;
+import com.guanhuan.steins.util.PreferencesLoader;
 
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -47,11 +46,8 @@ public class LoginLoader extends ObjectLoader {
                             @Override
                             public void onNext(ResultModel<String> result) {
                                 Log.i(TAG, "Token:"+result.getContent());
-                                //往请求前添加一个身份验证token
-                                HttpCommonInterceptor tokenInterceptor = new HttpCommonInterceptor.Builder()
-                                        .addHeaderParams(Constants.AUTHORIZATION, result.getContent())
-                                        .build();
-                                RetrofitServiceSingleton.getInstance(tokenInterceptor);
+                                new PreferencesLoader(App.getsContext())
+                                        .saveString("Token", result.getContent());
                             }
                         }
                 );

@@ -1,7 +1,12 @@
 package com.guanhuan.steins.conn;
 
+import android.content.SharedPreferences;
 import android.database.Observable;
 import android.provider.Settings;
+
+import com.guanhuan.steins.App;
+import com.guanhuan.steins.login.LoginLoader;
+import com.guanhuan.steins.util.PreferencesLoader;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,26 +29,10 @@ import static org.junit.Assert.*;
 public class SteinsRetrofitTest {
     @Test
     public void steinsFactory_test(){
-        UserApi api = SteinsFactory.getUserIOSingleton();
-        api.getToken("a744055252", "1111111")
-           .observeOn(AndroidSchedulers.mainThread())
-           .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<String>() {
-                    @Override
-                    public void onCompleted() {
-                        System.out.print("ok");
-                    }
+        LoginLoader loginLoader = new LoginLoader();
+        loginLoader.login("a744055252", "11111111");
 
-                    @Override
-                    public void onError(Throwable e) {
-                        System.out.print(e.toString());
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-                        System.out.print("Token:" + s);
-                    }
-                });
-
+        PreferencesLoader loader = new PreferencesLoader(App.getsContext());
+        System.out.print(loader.getString("Token"));
     }
 }

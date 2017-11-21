@@ -41,6 +41,10 @@ public class InterRetrofitServiceManager {
                 .build();
     }
 
+    private static String getToken(){
+        return "";
+    }
+
     /**
      * 获取对应的Service
      * @param service Service 的 class

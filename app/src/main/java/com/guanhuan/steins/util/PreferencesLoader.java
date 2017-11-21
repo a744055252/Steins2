@@ -72,10 +72,19 @@ public class PreferencesLoader {
         return mSharedPreferences.getInt(key, 0);
     }
 
+    public String getString(String key){
+        return mSharedPreferences.getString(key, "");
+    }
 
     public void saveInt(String key, int value) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putInt(key, value);
+        editor.apply();
+    }
+
+    public void saveString(String key, String value){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(key, value);
         editor.apply();
     }
 }

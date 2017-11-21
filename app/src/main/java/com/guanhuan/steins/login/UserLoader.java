@@ -2,10 +2,12 @@ package com.guanhuan.steins.login;
 
 import android.util.Log;
 
+import com.guanhuan.steins.App;
 import com.guanhuan.steins.data.entity.ResultModel;
 import com.guanhuan.steins.data.entity.User;
 import com.guanhuan.steins.http.ObjectLoader;
 import com.guanhuan.steins.http.RetrofitServiceSingleton;
+import com.guanhuan.steins.util.PreferencesLoader;
 
 import retrofit2.http.GET;
 import rx.Observable;

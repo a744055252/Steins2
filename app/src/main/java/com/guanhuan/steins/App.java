@@ -30,9 +30,9 @@ import com.litesuits.orm.LiteOrm;
  */
 public class App extends Application {
 
-    private static final String DB_NAME = "gank.db";
-    public static Context sContext;
-    public static LiteOrm sDb;
+    private static final String DB_NAME = "steins.db";
+    private static Context sContext;
+    private static LiteOrm sDb;
 
 
     @Override
@@ -46,6 +46,13 @@ public class App extends Application {
         }
     }
 
+    public static Context getsContext() {
+        return sContext;
+    }
+
+    public static LiteOrm getsDb() {
+        return sDb;
+    }
 
     @Override
     public void onTerminate() {
