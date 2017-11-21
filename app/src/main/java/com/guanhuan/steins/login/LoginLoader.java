@@ -4,9 +4,14 @@ import android.util.Log;
 
 import com.guanhuan.steins.App;
 import com.guanhuan.steins.data.entity.ResultModel;
+import com.guanhuan.steins.data.entity.User;
 import com.guanhuan.steins.http.ObjectLoader;
 import com.guanhuan.steins.http.RetrofitServiceManager;
 import com.guanhuan.steins.util.PreferencesLoader;
+import com.litesuits.orm.LiteOrm;
+import com.litesuits.orm.db.assit.QueryBuilder;
+
+import java.util.List;
 
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -29,7 +34,7 @@ public class LoginLoader extends ObjectLoader {
         loginService = RetrofitServiceManager.getInstance().create(LoginService.class);
     }
 
-    public void login(String account, String password){
+    public void login(final String account, String password){
         observe(loginService.getToken(account, password))
                 .subscribe(
                         new Subscriber<ResultModel<String>>() {
@@ -46,8 +51,17 @@ public class LoginLoader extends ObjectLoader {
                             @Override
                             public void onNext(ResultModel<String> result) {
                                 Log.i(TAG, "Token:"+result.getContent());
-                                new PreferencesLoader(App.getsContext())
-                                        .saveString("Token", result.getContent());
+                                LiteOrm liteOrm = App.getsDb();
+                                List<User> userList = liteOrm.query(new QueryBuilder(User.class)
+                                    .where("account = ?", new String[]{account})
+                                    .limit(0,1)
+                                );
+                                if(!userList.isEmpty()){
+                                    User user = new User();
+                                    user.account = account;
+                                    user.token = result.getContent();
+                                    liteOrm.save(user);
+                                }
                             }
                         }
                 );
