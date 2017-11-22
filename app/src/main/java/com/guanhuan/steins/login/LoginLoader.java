@@ -3,7 +3,8 @@ package com.guanhuan.steins.login;
 import android.util.Log;
 
 import com.guanhuan.steins.App;
-import com.guanhuan.steins.data.entity.ResultModel;
+import com.guanhuan.steins.config.Constants;
+import com.guanhuan.steins.data.model.ResultModel;
 import com.guanhuan.steins.data.entity.User;
 import com.guanhuan.steins.http.ObjectLoader;
 import com.guanhuan.steins.http.RetrofitServiceManager;
@@ -50,18 +51,27 @@ public class LoginLoader extends ObjectLoader {
 
                             @Override
                             public void onNext(ResultModel<String> result) {
-                                Log.i(TAG, "Token:"+result.getContent());
+                                String token = result.getContent();
+                                Log.i(TAG, "Token:"+token);
                                 LiteOrm liteOrm = App.getsDb();
                                 List<User> userList = liteOrm.query(new QueryBuilder(User.class)
                                     .where("account = ?", new String[]{account})
                                     .limit(0,1)
                                 );
-                                if(!userList.isEmpty()){
+                                if(userList != null && !userList.isEmpty()){
+                                    User user = userList.get(0);
+                                    user.token = token;
+                                    liteOrm.save(user);
+                                } else {
                                     User user = new User();
                                     user.account = account;
-                                    user.token = result.getContent();
+                                    user.token = token;
                                     liteOrm.save(user);
                                 }
+
+                                //将token存储起来
+                                PreferencesLoader loader = new PreferencesLoader(App.getsContext());
+                                loader.saveString(Constants.AUTHORIZATION, token);
                             }
                         }
                 );

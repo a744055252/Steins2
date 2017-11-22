@@ -1,9 +1,10 @@
-package com.guanhuan.steins.data.entity;
+package com.guanhuan.steins.data.model;
 
 import com.google.gson.annotations.Expose;
 
 
 /**
+ * 自定义返回结果
  * Created by 74405 on 2017/11/16.
  */
 public class ResultModel<T>  {

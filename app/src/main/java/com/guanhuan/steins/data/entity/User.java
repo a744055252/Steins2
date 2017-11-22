@@ -46,4 +46,10 @@ public class User implements Serializable{
     @Column("token")
     public String token;
 
+    @Override
+    public String toString() {
+        return "[userId:"+userId+", userName:"+userName+", account:"+account+", password:"+password+
+                ", createTime:"+createTime+", sex:"+sex+", age:"+age+", email:"+email+", phone:"+phone+
+                ", token:"+token+"]";
+    }
 }
