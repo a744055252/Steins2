@@ -32,7 +32,8 @@ public class LoginLoader extends ObjectLoader {
     private static final String TAG = "LoginLoader";
 
     public LoginLoader(){
-        loginService = RetrofitServiceManager.getInstance().create(LoginService.class);
+        loginService = RetrofitServiceManager.getInstance()
+                .create(LoginService.class);
     }
 
     public void login(final String account, String password){
