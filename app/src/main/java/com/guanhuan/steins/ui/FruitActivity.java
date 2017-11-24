@@ -1,4 +1,4 @@
-package com.guanhuan.steins;
+package com.guanhuan.steins.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.guanhuan.steins.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

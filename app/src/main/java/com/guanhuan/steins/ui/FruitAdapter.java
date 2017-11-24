@@ -1,4 +1,4 @@
-package com.guanhuan.steins;
+package com.guanhuan.steins.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.guanhuan.steins.R;
 import com.guanhuan.steins.data.entity.Fruit;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
                 mContext.startActivity(intent);
             }
         });
-        return new ViewHolder(view);
+        return holder;
     }
 
     @Override

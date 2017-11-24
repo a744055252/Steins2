@@ -9,6 +9,7 @@ import com.guanhuan.steins.data.entity.User;
 import com.guanhuan.steins.http.ObjectLoader;
 import com.guanhuan.steins.http.RetrofitServiceManager;
 import com.guanhuan.steins.util.PreferencesLoader;
+import com.guanhuan.steins.util.Toasts;
 import com.litesuits.orm.LiteOrm;
 import com.litesuits.orm.db.assit.QueryBuilder;
 
@@ -28,12 +29,14 @@ import rx.Subscriber;
 public class LoginLoader extends ObjectLoader {
 
     private LoginService loginService;
+    private UserLoader userLoader;
 
     private static final String TAG = "LoginLoader";
 
     public LoginLoader(){
         loginService = RetrofitServiceManager.getInstance()
                 .create(LoginService.class);
+        userLoader = new UserLoader();
     }
 
     public void login(final String account, String password){
@@ -59,12 +62,13 @@ public class LoginLoader extends ObjectLoader {
                                     .where("account = ?", new String[]{account})
                                     .limit(0,1)
                                 );
+                                User user;
                                 if(userList != null && !userList.isEmpty()){
-                                    User user = userList.get(0);
+                                   user = userList.get(0);
                                     user.token = token;
                                     liteOrm.save(user);
                                 } else {
-                                    User user = new User();
+                                    user = new User();
                                     user.account = account;
                                     user.token = token;
                                     liteOrm.save(user);
@@ -73,6 +77,7 @@ public class LoginLoader extends ObjectLoader {
                                 //将token存储起来
                                 PreferencesLoader loader = new PreferencesLoader(App.getsContext());
                                 loader.saveString(Constants.AUTHORIZATION, token);
+                                userLoader.getLoginUser();
                             }
                         }
                 );

@@ -1,4 +1,4 @@
-package com.guanhuan.steins;
+package com.guanhuan.steins.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

@@ -3,10 +3,13 @@ package com.guanhuan.steins.login;
 import android.util.Log;
 
 import com.guanhuan.steins.App;
+import com.guanhuan.steins.config.Constants;
 import com.guanhuan.steins.data.model.ResultModel;
 import com.guanhuan.steins.data.entity.User;
 import com.guanhuan.steins.http.ObjectLoader;
 import com.guanhuan.steins.http.RetrofitServiceManager;
+import com.guanhuan.steins.util.PreferencesLoader;
+import com.guanhuan.steins.util.Toasts;
 import com.litesuits.orm.db.assit.QueryBuilder;
 
 import java.util.List;
@@ -52,29 +55,18 @@ public class UserLoader extends ObjectLoader {
                                         .where("account = ?" , new String[]{user.account})
                                 );
 
-                                Log.i(TAG, "account list: " + userList.toString());
-
                                 if(userList != null && !userList.isEmpty()){
                                     user.userId = userList.get(0).userId;
                                 }
                                 App.getsDb().save(user);
 
-
-                                List<User> userList1 = App.getsDb().query(new QueryBuilder(User.class)
-                                        .where("account = ?" , new String[]{"a744055252"})
-                                );
-
-                                Log.i(TAG, "userList1:"+userList1.toString());
-
-                                if(userList1 != null && !userList.isEmpty()){
-                                    User user1 = userList.get(0);
-                                    Log.i(TAG, "_____user1:+" + user1.toString());
-                                } else {
-                                    Log.i(TAG, "_____userList is empty");
+                                PreferencesLoader loader = new PreferencesLoader(App.getsContext());
+                                if(user != null){
+                                    loader.saveString(Constants.LOGIN_USERNAME, user.userName);
+                                    loader.saveString(Constants.LOGIN_EMAIL, user.email);
                                 }
 
-//                                Log.i(TAG, "____User1:"+ user1.toString());
-
+                                Toasts.showShort(user.userName+"登陆成功");
                             }
                         }
                 );
