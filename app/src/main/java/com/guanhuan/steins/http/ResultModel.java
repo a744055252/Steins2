@@ -1,6 +1,7 @@
 package com.guanhuan.steins.http;
 
 import com.google.gson.annotations.Expose;
+import com.guanhuan.steins.config.Constants;
 
 
 /**
@@ -51,4 +52,6 @@ public class ResultModel<T>  {
     public void setContent(T content) {
         this.content = content;
     }
+
+    public boolean isError(){ return this.code != Constants.SUCCESS_CODE; }
 }

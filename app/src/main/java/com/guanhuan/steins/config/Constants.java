@@ -14,4 +14,10 @@ public class Constants {
     public static final String LOGIN_EMAIL = "login_email";
 
     public static final String LOGIN_IMAGE = "login_image";
+
+    /**  */
+    public static final String ERROR_MSG = "请求出错";
+
+    /** 请求成功码 */
+    public static final int SUCCESS_CODE = 200;
 }
