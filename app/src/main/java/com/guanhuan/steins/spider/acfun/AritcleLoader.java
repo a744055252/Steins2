@@ -2,9 +2,11 @@ package com.guanhuan.steins.spider.acfun;
 
 import android.util.Log;
 
+import com.guanhuan.steins.App;
 import com.guanhuan.steins.data.entity.ACMsg;
+import com.guanhuan.steins.data.model.ResultModel;
+import com.guanhuan.steins.http.DefaultObserver;
 import com.guanhuan.steins.http.ObjectLoader;
-import com.guanhuan.steins.http.ResultModel;
 import com.guanhuan.steins.http.RetrofitServiceManager;
 
 import java.util.List;
@@ -25,6 +27,8 @@ public class AritcleLoader extends ObjectLoader {
 
     private static final String TAG = "AritcleLoader";
 
+    private Map<String, List<ACMsg>> result ;
+
     public AritcleLoader() {
         aritcleService = RetrofitServiceManager.getInstance()
                 .create(AritcleService.class);
@@ -32,22 +36,25 @@ public class AritcleLoader extends ObjectLoader {
 
     public void loadAritcle(){
         observe(aritcleService.getAllAritcle())
-               .map(new Func1<ResultModel<Map<String,List<ACMsg>>>, Map<String, List<ACMsg>>>() {
+               .subscribe(new DefaultObserver<ResultModel<Map<String, List<ACMsg>>>>() {
                    @Override
-                   public Map<String, List<ACMsg>> call(ResultModel<Map<String, List<ACMsg>>> mapResultModel) {
-                       Log.i(TAG, "resultModel:" + mapResultModel.getMessage());
-                       return mapResultModel.getContent();
+                   public void onSuccess(ResultModel<Map<String, List<ACMsg>>> response) {
+                       result = response.getContent();
+                       Log.i(TAG, "onSuccess: aritcle load success");
                    }
-               })
-               .subscribe(new Action1<Map<String, List<ACMsg>>>() {
+
                    @Override
-                   public void call(Map<String, List<ACMsg>> stringListMap) {
-                       for(Map.Entry<String, List<ACMsg>> entry : stringListMap.entrySet()){
-                           Log.i(TAG, "__call:"+entry.getKey()+"_"+entry.getValue().get(0).acUrl);
-                       }
+                   public void onCompleted() {
+
                    }
-               })
-        ;
+               });
+    }
+
+    public List<ACMsg> getBanana(){
+        if(result == null || result.isEmpty()){
+            loadAritcle();
+        }
+        return result.get("banana");
     }
 
     public interface AritcleService {

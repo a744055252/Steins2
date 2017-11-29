@@ -21,6 +21,7 @@ package com.guanhuan.steins;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
 
 import com.guanhuan.steins.util.Toasts;
 import com.litesuits.orm.LiteOrm;
@@ -58,4 +59,5 @@ public class App extends Application {
     public void onTerminate() {
         super.onTerminate();
     }
+
 }

@@ -20,7 +20,10 @@
 package com.guanhuan.steins.util;
 
 import android.content.Context;
+import android.provider.Settings;
 import android.widget.Toast;
+
+import java.util.Random;
 
 /**
  * Created by drakeet on 9/27/14.
@@ -97,4 +100,6 @@ public class Toasts {
         showLong(message);
         showLong(message);
     }
+
+
 }

@@ -1,5 +1,8 @@
 package com.guanhuan.steins.login;
 
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.guanhuan.steins.App;
@@ -8,6 +11,7 @@ import com.guanhuan.steins.data.model.ResultModel;
 import com.guanhuan.steins.data.entity.User;
 import com.guanhuan.steins.http.ObjectLoader;
 import com.guanhuan.steins.http.RetrofitServiceManager;
+import com.guanhuan.steins.ui.MainActivity;
 import com.guanhuan.steins.util.PreferencesLoader;
 import com.guanhuan.steins.util.Toasts;
 import com.litesuits.orm.db.assit.QueryBuilder;
@@ -27,6 +31,7 @@ public class UserLoader extends ObjectLoader {
     private UserService userService;
 
     private static final String TAG = "UserLoader";
+
 
     public UserLoader(){
         userService = RetrofitServiceManager.getInstance().create(UserService.class);
@@ -65,8 +70,10 @@ public class UserLoader extends ObjectLoader {
                                     loader.saveString(Constants.LOGIN_USERNAME, user.userName);
                                     loader.saveString(Constants.LOGIN_EMAIL, user.email);
                                 }
-
                                 Toasts.showShort(user.userName+"登陆成功");
+                                //发送一次刷新请求
+                                Intent intent = new Intent(Constants.ACTION_REFRESH_USER);
+                                App.getsContext().sendBroadcast(intent);
                             }
                         }
                 );

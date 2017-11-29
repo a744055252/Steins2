@@ -53,7 +53,6 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
-                Log.i(TAG, "onClick: "+position);
                 Fruit fruit = mFruitList.get(position);
                 Intent intent = new Intent(mContext, FruitActivity.class);
                 intent.putExtra(FruitActivity.FRUIT_NAME, fruit.getName());

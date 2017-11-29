@@ -25,4 +25,10 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="connect_error"></string>
+    <string name="connect_timeout"></string>
+    <string name="bad_network"></string>
+    <string name="parse_error"></string>
+    <string name="unknown_error"></string>
 </resources>

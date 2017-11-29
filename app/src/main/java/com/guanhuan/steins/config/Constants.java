@@ -20,4 +20,8 @@ public class Constants {
 
     /** 请求成功码 */
     public static final int SUCCESS_CODE = 200;
+
+    /** action */
+    /** 刷新登陆用户 */
+    public static final String ACTION_REFRESH_USER = "android.user.refresh";
 }

@@ -8,7 +8,6 @@ import android.widget.EditText;
 
 import com.guanhuan.steins.R;
 import com.guanhuan.steins.login.LoginLoader;
-import com.guanhuan.steins.login.UserLoader;
 import com.guanhuan.steins.util.Toasts;
 
 import butterknife.BindView;
@@ -26,8 +25,7 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.login_register)
     Button loginRegister;
 
-    LoginLoader loginLoader = new LoginLoader();
-    UserLoader userLoader = new UserLoader();
+    LoginLoader loginLoader = new LoginLoader(LoginActivity.this);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +53,7 @@ public class LoginActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.setClass(LoginActivity.this, MainActivity.class);
         startActivity(intent);
+
     }
 }
 

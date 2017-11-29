@@ -1,13 +1,14 @@
 package com.guanhuan.steins.data.model;
 
 import com.google.gson.annotations.Expose;
+import com.guanhuan.steins.config.Constants;
 
 
 /**
  * 自定义返回结果
  * Created by 74405 on 2017/11/16.
  */
-public class ResultModel<T>  {
+public class ResultModel<T> {
 
     @Expose
     private int code;
@@ -52,4 +53,6 @@ public class ResultModel<T>  {
     public void setContent(T content) {
         this.content = content;
     }
+
+    public boolean isError(){ return this.code != Constants.SUCCESS_CODE; }
 }

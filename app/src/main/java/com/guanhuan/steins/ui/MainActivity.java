@@ -1,7 +1,10 @@
 package com.guanhuan.steins.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -26,6 +29,8 @@ import com.guanhuan.steins.App;
 import com.guanhuan.steins.R;
 import com.guanhuan.steins.config.Constants;
 import com.guanhuan.steins.data.entity.Fruit;
+import com.guanhuan.steins.spider.acfun.AritcleAdapter;
+import com.guanhuan.steins.spider.acfun.AritcleLoader;
 import com.guanhuan.steins.util.PreferencesLoader;
 import com.guanhuan.steins.util.Toasts;
 
@@ -39,6 +44,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
     @BindView(R.id.toolbar1)
     Toolbar toolbar;
     @BindView(R.id.tab)
@@ -51,6 +57,8 @@ public class MainActivity extends BaseActivity
     DrawerLayout drawer;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
 
     ImageView user_image;
     TextView user_name;
@@ -59,15 +67,31 @@ public class MainActivity extends BaseActivity
 
     PreferencesLoader loader;
 
+    public static final int UPDATE_USER = 1;
+
+
     private DrawerLayout drawerLayout;
 
     private List<Fruit> fruitList = new ArrayList<>();
 
-    private FruitAdapter adapter;
+//    private FruitAdapter adapter;
+
+    private AritcleAdapter adapter;
 
     private static final String TAG = "MainActivity";
 
-    public MainActivity(){
+    private AritcleLoader aritcleLoader = new AritcleLoader();
+
+    //用于刷新的广播
+    private BroadcastReceiver refresh = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            onResume();
+        }
+    };
+    private IntentFilter intentFilter;
+
+    public MainActivity() {
         loader = new PreferencesLoader(App.getsContext());
     }
 
@@ -81,10 +105,11 @@ public class MainActivity extends BaseActivity
         headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
 
         initFruits();
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new FruitAdapter(fruitList);
+//        adapter = new FruitAdapter(fruitList);
+        AritcleLoader aritcleLoader = new AritcleLoader();
+        adapter = new AritcleAdapter(aritcleLoader.getBanana());
         recyclerView.setAdapter(adapter);
 
 
@@ -106,6 +131,11 @@ public class MainActivity extends BaseActivity
                 swipeRefresh.setRefreshing(false);
             }
         });
+
+        //设置刷新广播
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.ACTION_REFRESH_USER);
+        registerReceiver(refresh, intentFilter);
     }
 
     private void initFruits() {
@@ -175,7 +205,7 @@ public class MainActivity extends BaseActivity
 
         switch (id) {
             case R.id.nav_camera:
-                Toasts.showShort("import");
+                aritcleLoader.loadAritcle();
                 break;
             case R.id.nav_gallery:
                 break;
@@ -198,17 +228,18 @@ public class MainActivity extends BaseActivity
 
     /**
      * 初始化侧边栏头
-     * @Date: 15:01 2017/11/24
+     *
      * @param
+     * @Date: 15:01 2017/11/24
      */
-    private void iniNav_header(){
+    private void iniNav_header() {
 
         user_image = (ImageView) headerLayout.findViewById(R.id.user_image);
         user_name = (TextView) headerLayout.findViewById(R.id.user_name);
         user_email = (TextView) headerLayout.findViewById(R.id.user_email);
         String token = loader.getString(Constants.AUTHORIZATION);
-        Log.i(TAG, "iniNav_header: "+token);
-        if(token == null || token.equals("")) {
+        Log.i(TAG, "iniNav_header: " + token);
+        if (token == null || token.equals("")) {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -223,18 +254,19 @@ public class MainActivity extends BaseActivity
 
     }
 
-    public void loadUser(){
+    public void loadUser() {
 
         //如果已经登陆则加载用户信息
         String userName = loader.getString(Constants.LOGIN_USERNAME);
         String userEmail = loader.getString(Constants.LOGIN_EMAIL);
-        if(userName != null && !userName.equals("")) {
+        Log.i(TAG, "loadUser:" + userName + "_" + userEmail);
+        if (userName != null && !userName.equals("")) {
             user_name.setText(userName);
             user_email.setText(userEmail);
         }
     }
 
-    public void logout(){
+    public void logout() {
         new AlertDialog.Builder(MainActivity.this).setTitle("系统提示")
                 .setMessage("是否退出登陆")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -251,5 +283,17 @@ public class MainActivity extends BaseActivity
                 })
                 .setNegativeButton("取消", null)
                 .show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUser();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(refresh);
     }
 }

@@ -1,15 +1,16 @@
 package com.guanhuan.steins.login;
 
+import android.app.Activity;
 import android.util.Log;
 
 import com.guanhuan.steins.App;
 import com.guanhuan.steins.config.Constants;
-import com.guanhuan.steins.data.model.ResultModel;
 import com.guanhuan.steins.data.entity.User;
+import com.guanhuan.steins.data.model.ResultModel;
+import com.guanhuan.steins.http.DefaultObserver;
 import com.guanhuan.steins.http.ObjectLoader;
 import com.guanhuan.steins.http.RetrofitServiceManager;
 import com.guanhuan.steins.util.PreferencesLoader;
-import com.guanhuan.steins.util.Toasts;
 import com.litesuits.orm.LiteOrm;
 import com.litesuits.orm.db.assit.QueryBuilder;
 
@@ -33,38 +34,32 @@ public class LoginLoader extends ObjectLoader {
 
     private static final String TAG = "LoginLoader";
 
-    public LoginLoader(){
+    private Activity activity;
+
+    public LoginLoader(Activity activity){
+        this.activity = activity;
         loginService = RetrofitServiceManager.getInstance()
                 .create(LoginService.class);
         userLoader = new UserLoader();
     }
 
     public void login(final String account, String password){
+
         observe(loginService.getToken(account, password))
                 .subscribe(
-                        new Subscriber<ResultModel<String>>() {
+                        new DefaultObserver<ResultModel<String>>(activity) {
                             @Override
-                            public void onCompleted() {
-                                Log.i(TAG, "onCompleted: running");
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e(TAG, "onError: "+e.toString(), e);
-                            }
-
-                            @Override
-                            public void onNext(ResultModel<String> result) {
-                                String token = result.getContent();
+                            public void onSuccess(ResultModel<String> response) {
+                                String token = response.getContent();
                                 Log.i(TAG, "Token:"+token);
                                 LiteOrm liteOrm = App.getsDb();
                                 List<User> userList = liteOrm.query(new QueryBuilder(User.class)
-                                    .where("account = ?", new String[]{account})
-                                    .limit(0,1)
+                                        .where("account = ?", new String[]{account})
+                                        .limit(0,1)
                                 );
                                 User user;
                                 if(userList != null && !userList.isEmpty()){
-                                   user = userList.get(0);
+                                    user = userList.get(0);
                                     user.token = token;
                                     liteOrm.save(user);
                                 } else {
@@ -78,6 +73,11 @@ public class LoginLoader extends ObjectLoader {
                                 PreferencesLoader loader = new PreferencesLoader(App.getsContext());
                                 loader.saveString(Constants.AUTHORIZATION, token);
                                 userLoader.getLoginUser();
+                            }
+
+                            @Override
+                            public void onCompleted() {
+                                Log.i(TAG, "onCompleted");
                             }
                         }
                 );

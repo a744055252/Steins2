@@ -3,10 +3,11 @@ package com.guanhuan.steins.http;
 import android.app.Activity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.JsonParseException;
+import com.guanhuan.steins.R;
 import com.guanhuan.steins.config.Constants;
+import com.guanhuan.steins.data.model.ResultModel;
 import com.guanhuan.steins.util.CommonDialogUtils;
 import com.guanhuan.steins.util.Toasts;
 
@@ -15,12 +16,10 @@ import java.io.InterruptedIOException;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.text.ParseException;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import retrofit2.HttpException;
+import rx.Observer;
 
 import static com.guanhuan.steins.http.DefaultObserver.ExceptionReason.*;
-
 
 /**
  * Created by zhpan on 2017/4/18.
@@ -34,6 +33,8 @@ public abstract class DefaultObserver<T extends ResultModel> implements Observer
     //  Activity 是否在执行onStop()时取消订阅
     private boolean isAddInStop = false;
     private CommonDialogUtils dialogUtils;
+    public DefaultObserver(){
+    }
     public DefaultObserver(Activity activity) {
         this.activity = activity;
         dialogUtils=new CommonDialogUtils();
@@ -48,10 +49,6 @@ public abstract class DefaultObserver<T extends ResultModel> implements Observer
         }
     }
 
-    @Override
-    public void onSubscribe(Disposable d) {
-
-    }
 
     @Override
     public void onNext(T response) {
@@ -61,11 +58,6 @@ public abstract class DefaultObserver<T extends ResultModel> implements Observer
         } else {
             onFail(response);
         }
-        /*if (response.getCode() == 200) {
-            onSuccess(response);
-        } else {
-            onFail(response);
-        }*/
     }
 
     private void dismissProgress(){
@@ -94,10 +86,6 @@ public abstract class DefaultObserver<T extends ResultModel> implements Observer
         }
     }
 
-    @Override
-    public void onComplete() {
-    }
-
     /**
      * 请求成功
      *
@@ -110,41 +98,37 @@ public abstract class DefaultObserver<T extends ResultModel> implements Observer
      *
      * @param response 服务器返回的数据
      */
-    public void onFail(T response) {
+    private void onFail(T response) {
         String message = response.getMessage();
         if (TextUtils.isEmpty(message)) {
-            Toasts.showShort(Constants.ERROR_MSG);
+            Toasts.showShort(response.getCode()+" : "+Constants.ERROR_MSG);
         } else {
-            Toasts.showShort(message);
+            Toasts.showShort(response.getCode()+" : "+message);
         }
     }
 
     /**
-     * 请求异常(待改善)
+     * 请求异常
      *
      * @param reason
      */
-    public void onException(ExceptionReason reason) {
+    private void onException(ExceptionReason reason) {
         switch (reason) {
             case CONNECT_ERROR:
-//                ToastUtils.show(R.string.connect_error, Toast.LENGTH_SHORT);
+                Toasts.showShort(R.string.connect_error);
                 break;
-
             case CONNECT_TIMEOUT:
-//                ToastUtils.show(R.string.connect_timeout, Toast.LENGTH_SHORT);
+                Toasts.showShort(R.string.connect_timeout);
                 break;
-
             case BAD_NETWORK:
-//                ToastUtils.show(R.string.bad_network, Toast.LENGTH_SHORT);
+                Toasts.showShort(R.string.bad_network);
                 break;
-
             case PARSE_ERROR:
-//                ToastUtils.show(R.string.parse_error, Toast.LENGTH_SHORT);
+                Toasts.showShort(R.string.parse_error);
                 break;
-
             case UNKNOWN_ERROR:
             default:
-//                ToastUtils.show(R.string.unknown_error, Toast.LENGTH_SHORT);
+                Toasts.showShort(R.string.unknown_error);
                 break;
         }
     }

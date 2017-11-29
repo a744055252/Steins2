@@ -2,13 +2,14 @@ package com.guanhuan.steins.data.entity;
 
 import com.litesuits.orm.db.annotation.Column;
 import com.litesuits.orm.db.annotation.PrimaryKey;
+import com.litesuits.orm.db.annotation.Table;
 
 import java.io.Serializable;
 
 /**
  * Created by 74405 on 2017/11/15.
  */
-
+@Table("acmsg")
 public class ACMsg implements Serializable{
 
     @PrimaryKey(PrimaryKey.AssignType.AUTO_INCREMENT)
