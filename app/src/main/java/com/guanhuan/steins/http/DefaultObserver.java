@@ -100,6 +100,7 @@ public abstract class DefaultObserver<T extends ResultModel> implements Observer
      */
     private void onFail(T response) {
         String message = response.getMessage();
+        Log.i(TAG, "onFail: "+ response.getCode() + "Message:" + response.getMessage());
         if (TextUtils.isEmpty(message)) {
             Toasts.showShort(response.getCode()+" : "+Constants.ERROR_MSG);
         } else {

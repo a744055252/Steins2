@@ -18,10 +18,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,8 +59,6 @@ public class MainActivity extends BaseActivity
     DrawerLayout drawer;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
 
     ImageView user_image;
     TextView user_name;
@@ -69,18 +69,7 @@ public class MainActivity extends BaseActivity
 
     public static final int UPDATE_USER = 1;
 
-
-    private DrawerLayout drawerLayout;
-
-    private List<Fruit> fruitList = new ArrayList<>();
-
-//    private FruitAdapter adapter;
-
-    private AritcleAdapter adapter;
-
     private static final String TAG = "MainActivity";
-
-    private AritcleLoader aritcleLoader = new AritcleLoader();
 
     //用于刷新的广播
     private BroadcastReceiver refresh = new BroadcastReceiver() {
@@ -104,20 +93,10 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
         headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
 
-        initFruits();
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(layoutManager);
-//        adapter = new FruitAdapter(fruitList);
-        AritcleLoader aritcleLoader = new AritcleLoader();
-        adapter = new AritcleAdapter(aritcleLoader.getBanana());
-        recyclerView.setAdapter(adapter);
-
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
 
         iniNav_header();
 
@@ -138,32 +117,6 @@ public class MainActivity extends BaseActivity
         registerReceiver(refresh, intentFilter);
     }
 
-    private void initFruits() {
-        for (int i = 0; i < 2; i++) {
-            Fruit apple = new Fruit(getRandomLengthName("apple"), R.drawable.apple_pic);
-            fruitList.add(apple);
-            Fruit banana = new Fruit(getRandomLengthName("banana"), R.drawable.banana_pic);
-            fruitList.add(banana);
-            Fruit orange = new Fruit(getRandomLengthName("orange_pic"), R.drawable.orange_pic);
-            fruitList.add(orange);
-            Fruit watermelon = new Fruit(getRandomLengthName("watermelon_pic"), R.drawable.watermelon_pic);
-            fruitList.add(watermelon);
-            Fruit pear = new Fruit(getRandomLengthName("pear"), R.drawable.pear_pic);
-            fruitList.add(pear);
-            Fruit grape = new Fruit(getRandomLengthName("grape_pic"), R.drawable.grape_pic);
-            fruitList.add(grape);
-        }
-    }
-
-    private String getRandomLengthName(String name) {
-        Random random = new Random();
-        int length = random.nextInt(20) + 1;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            sb.append(name);
-        }
-        return sb.toString();
-    }
 
     @Override
     public void onBackPressed() {
@@ -205,9 +158,11 @@ public class MainActivity extends BaseActivity
 
         switch (id) {
             case R.id.nav_camera:
-                aritcleLoader.loadAritcle();
                 break;
             case R.id.nav_gallery:
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, ACfunActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_slideshow:
                 break;

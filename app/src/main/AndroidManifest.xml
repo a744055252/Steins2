@@ -37,7 +37,11 @@
             android:theme="@style/FruitActivityTheme" />
         <activity
             android:name=".ui.LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name=".ui.ACfunActivity"
+            android:label="@string/title_activity_acfun">
+        </activity>
     </application>
 
 </manifest>

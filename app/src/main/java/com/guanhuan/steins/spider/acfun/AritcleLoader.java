@@ -1,8 +1,8 @@
 package com.guanhuan.steins.spider.acfun;
 
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.guanhuan.steins.App;
 import com.guanhuan.steins.data.entity.ACMsg;
 import com.guanhuan.steins.data.model.ResultModel;
 import com.guanhuan.steins.http.DefaultObserver;
@@ -14,8 +14,6 @@ import java.util.Map;
 
 import retrofit2.http.GET;
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * Created by guanhuan_li on 2017/11/23.
@@ -29,9 +27,14 @@ public class AritcleLoader extends ObjectLoader {
 
     private Map<String, List<ACMsg>> result ;
 
-    public AritcleLoader() {
+    private AritcleAdapter adapter;
+
+    private RecyclerView recyclerView;
+
+    public AritcleLoader(RecyclerView recyclerView) {
         aritcleService = RetrofitServiceManager.getInstance()
                 .create(AritcleService.class);
+        this.recyclerView = recyclerView;
     }
 
     public void loadAritcle(){
@@ -41,6 +44,8 @@ public class AritcleLoader extends ObjectLoader {
                    public void onSuccess(ResultModel<Map<String, List<ACMsg>>> response) {
                        result = response.getContent();
                        Log.i(TAG, "onSuccess: aritcle load success");
+                       adapter = new AritcleAdapter(result.get("banana"));
+                       recyclerView.setAdapter(adapter);
                    }
 
                    @Override
@@ -48,6 +53,7 @@ public class AritcleLoader extends ObjectLoader {
 
                    }
                });
+
     }
 
     public List<ACMsg> getBanana(){

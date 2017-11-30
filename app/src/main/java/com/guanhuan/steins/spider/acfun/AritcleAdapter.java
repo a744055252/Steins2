@@ -1,7 +1,6 @@
 package com.guanhuan.steins.spider.acfun;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.guanhuan.steins.R;
 import com.guanhuan.steins.data.entity.ACMsg;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,8 +27,8 @@ public class AritcleAdapter extends RecyclerView.Adapter<AritcleAdapter.ViewHold
 
     private List<ACMsg> banana;
 
-    public AritcleAdapter(List<ACMsg> banana){
-        this.banana = banana;
+    public AritcleAdapter(List<ACMsg> list){
+        this.banana = list;
     }
 
     @Override
@@ -64,7 +62,13 @@ public class AritcleAdapter extends RecyclerView.Adapter<AritcleAdapter.ViewHold
 
     @Override
     public int getItemCount() {
+        if(banana == null)
+            return 0;
         return banana.size();
+    }
+
+    public void setBanana(List<ACMsg> banana) {
+        this.banana = banana;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
@@ -74,8 +78,8 @@ public class AritcleAdapter extends RecyclerView.Adapter<AritcleAdapter.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView;
-            imageView = (ImageView) itemView.findViewById(R.id.fruit_image);
-            textView = (TextView) itemView.findViewById(R.id.fruit_name);
+            imageView = (ImageView) itemView.findViewById(R.id.card_image);
+            textView = (TextView) itemView.findViewById(R.id.card_name);
         }
     }
 }
