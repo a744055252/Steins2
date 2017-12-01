@@ -1,63 +1,106 @@
-/*
- * Copyright (C) 2015 Drakeet <drakeet.me@gmail.com>
- *
- * This file is part of Meizhi
- *
- * Meizhi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Meizhi is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Meizhi.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.guanhuan.steins;
 
+import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.os.Handler;
 
+import com.guanhuan.steins.bridge.BridgeFactory;
+import com.guanhuan.steins.bridge.BridgeLifeCycleSetKeeper;
+import com.guanhuan.steins.bridge.Bridges;
+import com.guanhuan.steins.bridge.cache.localstorage.LocalFileStorageManager;
 import com.guanhuan.steins.util.Toasts;
-import com.litesuits.orm.LiteOrm;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by drakeet on 6/21/15.
+ * 
+ * <应用初始化> <功能详细描述>
+ * 
  */
-public class App extends Application {
+public class App extends Application
+{
+    /**
+     * app实例
+     */
+    public static App app = null;
+    
+    /**
+     * 本地activity栈
+     */
+    public static List<Activity> activitys = new ArrayList<Activity>();
+    
+    /**
+     * 当前avtivity名称
+     */
+    public static String currentActivityName = "";
+    
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+        initData();
+    }
 
-    private static final String DB_NAME = "steins.db";
-    private static Context sContext;
-    private static LiteOrm sDb;
+    /**
+     * 初始化数据
+     */
+    private void initData() {
+        app = this;
+        BridgeFactory.init(this);
+        Toasts.register(this);
+        BridgeLifeCycleSetKeeper.getInstance().initOnApplicationCreate(this);
+        LocalFileStorageManager manager = BridgeFactory.getBridge(Bridges.LOCAL_FILE_STORAGE);
+        Picasso picasso = new Picasso.Builder(this).downloader(
+                new OkHttpDownloader(new File(manager.getCacheImgFilePath(this)))).build();
+        Picasso.setSingletonInstance(picasso);
+
+    }
 
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        sContext = this;
-        Toasts.register(this);
-        sDb = LiteOrm.newSingleInstance(this, DB_NAME);
-        if (BuildConfig.DEBUG) {
-            sDb.setDebugged(true);
+    public void onTerminate()
+    {
+        super.onTerminate();
+        onDestory();
+    }
+
+    /**
+     * 退出应用，清理内存
+     */
+    private void onDestory() {
+        BridgeLifeCycleSetKeeper.getInstance().clearOnApplicationQuit();
+    }
+
+
+    /**
+     * 
+     * <添加> <功能详细描述>
+     * 
+     * @param activity
+     * @see [类、类#方法、类#成员]
+     */
+    public void addActivity(Activity activity)
+    {
+        activitys.add(activity);
+    }
+    
+    /**
+     * 
+     * <删除>
+     * <功能详细描述>
+     * @param activity
+     * @see [类、类#方法、类#成员]
+     */
+    public void deleteActivity(Activity activity)
+    {
+        if (activity != null)
+        {
+            activitys.remove(activity);
+            activity.finish();
+            activity = null;
         }
     }
-
-    public static Context getsContext() {
-        return sContext;
-    }
-
-    public static LiteOrm getsDb() {
-        return sDb;
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
-
 }

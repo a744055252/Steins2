@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.guanhuan.steins.R;
-import com.guanhuan.steins.login.LoginLoader;
 import com.guanhuan.steins.util.Toasts;
 
 import butterknife.BindView;

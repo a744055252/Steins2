@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.guanhuan.steins.R;
-import com.guanhuan.steins.data.entity.ACMsg;
+import com.guanhuan.steins.bean.entity.ACMsg;
 
 import java.util.List;
 

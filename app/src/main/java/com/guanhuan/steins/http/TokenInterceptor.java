@@ -2,12 +2,11 @@ package com.guanhuan.steins.http;
 
 import android.util.Log;
 
-import com.guanhuan.steins.App;
+import com.guanhuan.steins.App1;
 import com.guanhuan.steins.config.Constants;
 import com.guanhuan.steins.util.PreferencesLoader;
 
 import java.io.IOException;
-import java.util.Map;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -37,7 +36,7 @@ public class TokenInterceptor implements Interceptor{
         requestBuilder.method(oldRequest.method(), oldRequest.body());
 
         //读取token
-        PreferencesLoader loader = new PreferencesLoader(App.getsContext());
+        PreferencesLoader loader = new PreferencesLoader(App1.getsContext());
         String token = loader.getString(Constants.AUTHORIZATION);
 
         //添加公共参数Token,添加到header中

@@ -14,31 +14,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.guanhuan.steins.App;
+import com.guanhuan.steins.App1;
 import com.guanhuan.steins.R;
 import com.guanhuan.steins.config.Constants;
-import com.guanhuan.steins.data.entity.Fruit;
-import com.guanhuan.steins.spider.acfun.AritcleAdapter;
-import com.guanhuan.steins.spider.acfun.AritcleLoader;
 import com.guanhuan.steins.util.PreferencesLoader;
 import com.guanhuan.steins.util.Toasts;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,7 +70,7 @@ public class MainActivity extends BaseActivity
     private IntentFilter intentFilter;
 
     public MainActivity() {
-        loader = new PreferencesLoader(App.getsContext());
+        loader = new PreferencesLoader(App1.getsContext());
     }
 
     @Override
@@ -106,7 +95,7 @@ public class MainActivity extends BaseActivity
 
             @Override
             public void onRefresh() {
-                Toast.makeText(App.getsContext(), "刷新", Toast.LENGTH_SHORT).show();
+                Toast.makeText(App1.getsContext(), "刷新", Toast.LENGTH_SHORT).show();
                 swipeRefresh.setRefreshing(false);
             }
         });

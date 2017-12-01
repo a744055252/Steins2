@@ -7,7 +7,7 @@ import android.util.Log;
 import com.google.gson.JsonParseException;
 import com.guanhuan.steins.R;
 import com.guanhuan.steins.config.Constants;
-import com.guanhuan.steins.data.model.ResultModel;
+import com.guanhuan.steins.bean.model.ResultModel;
 import com.guanhuan.steins.util.CommonDialogUtils;
 import com.guanhuan.steins.util.Toasts;
 
@@ -29,30 +29,16 @@ public abstract class DefaultObserver<T extends ResultModel> implements Observer
 
     private static final String TAG = "DefaultObserver";
 
-    private Activity activity;
     //  Activity 是否在执行onStop()时取消订阅
     private boolean isAddInStop = false;
-    private CommonDialogUtils dialogUtils;
+
     public DefaultObserver(){
     }
-    public DefaultObserver(Activity activity) {
-        this.activity = activity;
-        dialogUtils=new CommonDialogUtils();
-        dialogUtils.showProgress(activity);
-    }
 
-    public DefaultObserver(Activity activity, boolean isShowLoading) {
-        this.activity = activity;
-        dialogUtils=new CommonDialogUtils();
-        if (isShowLoading) {
-            dialogUtils.showProgress(activity,"Loading...");
-        }
-    }
 
 
     @Override
     public void onNext(T response) {
-        dismissProgress();
         if (!response.isError()) {
             onSuccess(response);
         } else {
@@ -60,16 +46,10 @@ public abstract class DefaultObserver<T extends ResultModel> implements Observer
         }
     }
 
-    private void dismissProgress(){
-        if(dialogUtils!=null){
-            dialogUtils.dismissProgress();
-        }
-    }
 
     @Override
     public void onError(Throwable e) {
         Log.i(TAG, e.getMessage());
-        dismissProgress();
         if (e instanceof HttpException) {     //   HTTP错误
             onException(ExceptionReason.BAD_NETWORK);
         } else if (e instanceof ConnectException

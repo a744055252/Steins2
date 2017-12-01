@@ -3,11 +3,11 @@ package com.guanhuan.steins.spider.acfun;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.guanhuan.steins.data.entity.ACMsg;
-import com.guanhuan.steins.data.model.ResultModel;
+import com.guanhuan.steins.bean.entity.ACMsg;
+import com.guanhuan.steins.bean.model.ResultModel;
 import com.guanhuan.steins.http.DefaultObserver;
 import com.guanhuan.steins.http.ObjectLoader;
-import com.guanhuan.steins.http.RetrofitServiceManager;
+import com.guanhuan.steins.bridge.http.RetrofitServiceManager;
 
 import java.util.List;
 import java.util.Map;
