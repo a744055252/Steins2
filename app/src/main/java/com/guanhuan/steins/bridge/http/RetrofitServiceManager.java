@@ -13,6 +13,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by zhouwei on 16/11/9.
@@ -27,6 +29,7 @@ public class RetrofitServiceManager implements BridgeLifeCycleListener {
 
     /** 为请求增加authorization 消息头 */
     private RetrofitServiceManager(){
+
         //InputStream[] cerInput = null;
         //读取证书流，可以为多个
         //cerInput[0] = App1.getsContext().getAssets().open("android.cer");

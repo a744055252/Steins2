@@ -1,6 +1,5 @@
 package com.guanhuan.steins.http;
 
-import android.app.Activity;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -8,7 +7,6 @@ import com.google.gson.JsonParseException;
 import com.guanhuan.steins.R;
 import com.guanhuan.steins.config.Constants;
 import com.guanhuan.steins.bean.model.ResultModel;
-import com.guanhuan.steins.util.CommonDialogUtils;
 import com.guanhuan.steins.util.Toasts;
 
 import org.json.JSONException;
@@ -21,9 +19,6 @@ import rx.Observer;
 
 import static com.guanhuan.steins.http.DefaultObserver.ExceptionReason.*;
 
-/**
- * Created by zhpan on 2017/4/18.
- */
 
 public abstract class DefaultObserver<T extends ResultModel> implements Observer<T> {
 
@@ -49,7 +44,7 @@ public abstract class DefaultObserver<T extends ResultModel> implements Observer
 
     @Override
     public void onError(Throwable e) {
-        Log.i(TAG, e.getMessage());
+        Log.e(TAG, e.getMessage(), e);
         if (e instanceof HttpException) {     //   HTTP错误
             onException(ExceptionReason.BAD_NETWORK);
         } else if (e instanceof ConnectException

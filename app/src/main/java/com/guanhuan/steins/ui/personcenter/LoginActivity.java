@@ -9,8 +9,10 @@ import com.guanhuan.steins.R;
 import com.guanhuan.steins.biz.personcenter.IUserLoginView;
 import com.guanhuan.steins.biz.personcenter.LoginPresenter;
 import com.guanhuan.steins.constant.Event;
+import com.guanhuan.steins.ui.HomeActivity;
 import com.guanhuan.steins.ui.base.BaseActivity;
 
+import org.greenrobot.eventbus.EventBus;
 
 public class LoginActivity extends BaseActivity implements IUserLoginView {
 
@@ -42,9 +44,9 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
 
     @Override
     public void initViews() {
-//        userName = (EditText) findViewById(R.id.username);
-//        password = (EditText) findViewById(R.id.passowrd);
-//        login = (Button) findViewById(R.id.login);
+        userName = (EditText) findViewById(R.id.login_account);
+        password = (EditText) findViewById(R.id.login_password);
+        login = (Button) findViewById(R.id.login_submit);
     }
 
     @Override
@@ -60,7 +62,6 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
     @Override
     public void setHeader() {
         super.setHeader();
-        title.setText("登录");
     }
 
     @Override
@@ -76,10 +77,9 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.login:
-//                //13914786934   123456  可以登录
-//                mUserLoginPresenter.login(userName.getText().toString(), password.getText().toString());
-//                break;
+            case R.id.login_submit:
+                mUserLoginPresenter.login(userName.getText().toString(), password.getText().toString());
+                break;
         }
         super.onClick(v);
     }
@@ -97,7 +97,9 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
 
     @Override
     public void onSuccess() {
-        startActivity(HomeActivity.class,null);
+//        startActivity(HomeActivity.class,null);
+        EventBus.getDefault().post(Event.USER_TOKEN_SUCCESS);
+        startActivity(HomeActivity.class, null);
     }
 
     @Override
@@ -108,5 +110,11 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
     @Override
     public void hideLoading() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mUserLoginPresenter.onStop();
     }
 }

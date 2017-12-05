@@ -24,7 +24,7 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.login_register)
     Button loginRegister;
 
-    LoginLoader loginLoader = new LoginLoader(LoginActivity.this);
+//    LoginLoader loginLoader = new LoginLoader(LoginActivity.this);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
-        loginLoader.login(account, password);
+//        loginLoader.login(account, password);
 
         Intent intent = new Intent();
         intent.setClass(LoginActivity.this, MainActivity.class);

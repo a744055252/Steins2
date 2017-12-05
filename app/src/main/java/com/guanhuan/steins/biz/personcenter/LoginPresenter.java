@@ -3,7 +3,8 @@ package com.guanhuan.steins.biz.personcenter;
 
 import android.util.Log;
 
-import com.guanhuan.steins.Api.LoginService;
+import com.guanhuan.steins.App;
+import com.guanhuan.steins.api.LoginService;
 import com.guanhuan.steins.bean.entity.User;
 import com.guanhuan.steins.bean.model.ResultModel;
 import com.guanhuan.steins.biz.BasePresenter;
@@ -11,43 +12,51 @@ import com.guanhuan.steins.bridge.BridgeFactory;
 import com.guanhuan.steins.bridge.Bridges;
 import com.guanhuan.steins.bridge.cache.DB.DBManager;
 import com.guanhuan.steins.bridge.http.RetrofitServiceManager;
+import com.guanhuan.steins.config.Constants;
 import com.guanhuan.steins.http.DefaultObserver;
+import com.guanhuan.steins.util.PreferencesLoader;
 import com.litesuits.orm.LiteOrm;
 import com.litesuits.orm.db.assit.QueryBuilder;
 
 import java.util.List;
 
+import rx.Subscriber;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+
 /**
  * <功能详细描述>
  *
- * @author caoyinfei
- * @version [版本号, 2016/5/4]
- * @see [相关类/方法]
- * @since [产品/模块版本]
  */
 public class LoginPresenter extends BasePresenter<IUserLoginView> {
 
     LoginService loginService;
 
-    RetrofitServiceManager manager = BridgeFactory.getBridge(Bridges.HTTP);
-    DBManager dbmanager = BridgeFactory.getBridge(Bridges.DATABASE);
+    private RetrofitServiceManager manager = BridgeFactory.getBridge(Bridges.HTTP);
+    private DBManager dbmanager = BridgeFactory.getBridge(Bridges.DATABASE);
+
+    private PreferencesLoader preferencesLoader;
+    private CompositeSubscription mCompositeSubscription;
 
     private static final String TAG = "LoginPresenter";
 
     public LoginPresenter() {
         loginService = manager.create(LoginService.class);
+        mCompositeSubscription = new CompositeSubscription();
+        preferencesLoader = new PreferencesLoader(App.app);
     }
 
     public void login(final String account, String password) {
         //网络层
         mvpView.showLoading();
-        observe(loginService.getToken(account, password))
+        Subscription s = observe(loginService.getToken(account, password))
                 .subscribe(
                         new DefaultObserver<ResultModel<String>>() {
                             @Override
                             public void onSuccess(ResultModel<String> response) {
                                 String token = response.getContent();
                                 Log.i(TAG, "Token:"+token);
+                                preferencesLoader.saveString(Constants.AUTHORIZATION, token);
                                 LiteOrm liteOrm = dbmanager.getsDb();
                                 List<User> userList = liteOrm.query(new QueryBuilder(User.class)
                                         .where("account = ?", new String[]{account})
@@ -64,7 +73,8 @@ public class LoginPresenter extends BasePresenter<IUserLoginView> {
                                     user.token = token;
                                     liteOrm.save(user);
                                 }
-
+                                mvpView.clearEditContent();
+                                mvpView.onSuccess();
                             }
 
                             @Override
@@ -73,29 +83,12 @@ public class LoginPresenter extends BasePresenter<IUserLoginView> {
                             }
                         }
                 );
-//        SecurityManager securityManager = BridgeFactory.getBridge(Bridges.SECURITY);
+        mCompositeSubscription.add(s);
+    }
 
-//        OkHttpManager httpManager = BridgeFactory.getBridge(Bridges.HTTP);
-//
-//        httpManager.requestAsyncPostByTag(URLUtil.USER_LOGIN, getName(), new ITRequestResult<LoginResp>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        mvpView.hideLoading();
-//                    }
-//
-//                    @Override
-//                    public void onSuccessful(LoginResp entity) {
-//                        mvpView.onSuccess();
-//                        EBSharedPrefManager manager = BridgeFactory.getBridge(Bridges.SHARED_PREFERENCE);
-//                        manager.getKDPreferenceUserInfo().saveString(EBSharedPrefUser.USER_NAME, "abc");
-//                    }
-//
-//                    @Override
-//                    public void onFailure(String errorMsg) {
-//                        mvpView.onError(errorMsg, "");
-//                    }
-//
-//                }, LoginResp.class, new Param("username", useName),
-//                new Param("pas", securityManager.get32MD5Str(password)));
+    public void onStop() {
+        if(mCompositeSubscription != null){
+            mCompositeSubscription.unsubscribe();
+        }
     }
 }

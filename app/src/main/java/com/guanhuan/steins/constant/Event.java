@@ -3,15 +3,25 @@ package com.guanhuan.steins.constant;
  /**
  * <事件类型>
  *
- * @author caoyinfei
- * @version [版本号, 2016/6/6]
- * @see [相关类/方法]
- * @since [V1]
  */
 public enum Event {
-    /**
-     * 图片成功
-     */
-    IMAGE_LOADER_SUCCESS,
+     /** 图片成功 */
+     IMAGE_LOADER_SUCCESS("图片加载成功"),
 
-}
+     /** 用户登陆成功 */
+     USER_LOGING_SUCCESS("用户登陆成功"),
+
+     /** 成功获取Token,获取用户信息 */
+     USER_TOKEN_SUCCESS("成功获取Token");
+
+
+     private String msg;
+
+     Event(String msg){
+         this.msg = msg;
+     }
+
+     public String getMsg() {
+         return msg;
+     }
+ }

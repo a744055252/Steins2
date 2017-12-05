@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.guanhuan.steins.ui.MainActivity"
+    tools:context="com.guanhuan.steins.ui.HomeActivity"
     tools:showIn="@layout/app_bar_main">
 
     <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"

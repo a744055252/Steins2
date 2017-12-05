@@ -53,9 +53,9 @@ public class App extends Application
         Toasts.register(this);
         BridgeLifeCycleSetKeeper.getInstance().initOnApplicationCreate(this);
         LocalFileStorageManager manager = BridgeFactory.getBridge(Bridges.LOCAL_FILE_STORAGE);
-        Picasso picasso = new Picasso.Builder(this).downloader(
-                new OkHttpDownloader(new File(manager.getCacheImgFilePath(this)))).build();
-        Picasso.setSingletonInstance(picasso);
+//        Picasso picasso = new Picasso.Builder(this).downloader(
+//                new OkHttpDownloader(new File(manager.getCacheImgFilePath(this)))).build();
+//        Picasso.setSingletonInstance(picasso);
 
     }
 

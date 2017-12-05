@@ -1,8 +1,8 @@
 package com.guanhuan.steins.ui.base;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -14,11 +14,14 @@ import com.guanhuan.steins.biz.BasePresenter;
 import com.guanhuan.steins.biz.IMvpView;
 import com.guanhuan.steins.constant.Event;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 
 /**
  * <基础activity>
  */
-public abstract class BaseActivity extends Activity implements CreateInit, PublishActivityCallBack, PresentationLayerFunc, IMvpView, OnClickListener {
+public abstract class BaseActivity extends AppCompatActivity implements CreateInit, PublishActivityCallBack, PresentationLayerFunc, IMvpView, OnClickListener {
 
     private PresentationLayerFuncHelper presentationLayerFuncHelper;
 
@@ -39,21 +42,22 @@ public abstract class BaseActivity extends Activity implements CreateInit, Publi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presentationLayerFuncHelper = new PresentationLayerFuncHelper(this);
 
         initViews();
         initListeners();
         initData();
         setHeader();
+        EventBus.getDefault().register(this);
         App.app.addActivity(this);
     }
 
+
     @Override
     public void setHeader() {
-        back = (LinearLayout) findViewById(R.id.ll_back);
-        title = (TextView) findViewById(R.id.tv_title);
-        right = (TextView) findViewById(R.id.tv_right);
-        back.setOnClickListener(this);
+//        back = (LinearLayout) findViewById(R.id.ll_back);
+//        title = (TextView) findViewById(R.id.tv_title);
+//        right = (TextView) findViewById(R.id.tv_right);
+//        back.setOnClickListener(this);
     }
 
     @Override
@@ -65,6 +69,7 @@ public abstract class BaseActivity extends Activity implements CreateInit, Publi
         }
     }
 
+    @Subscribe
     public void onEventMainThread(Event event) {
 
     }
@@ -125,14 +130,16 @@ public abstract class BaseActivity extends Activity implements CreateInit, Publi
         presentationLayerFuncHelper.hideSoftKeyboard();
     }
 
+
     @Override
     protected void onDestroy() {
         App.app.deleteActivity(this);
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         if (presenter != null) {
             presenter.detachView(this);
         }
         //已发送的请求未取消
+
         super.onDestroy();
     }
 

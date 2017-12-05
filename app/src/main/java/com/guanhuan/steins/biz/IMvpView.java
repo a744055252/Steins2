@@ -12,4 +12,5 @@ public interface IMvpView {
     void showLoading();
 
     void hideLoading();
+
 }

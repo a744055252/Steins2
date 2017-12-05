@@ -1,6 +1,7 @@
 package com.guanhuan.steins.capabilities.security;
 
-import com.focustech.electronicbrand.util.GeneralUtils;
+
+import com.guanhuan.steins.util.GeneralUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

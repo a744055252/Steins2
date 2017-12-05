@@ -1,7 +1,7 @@
 package com.guanhuan.steins.capabilities.json;
 
-import com.focustech.electronicbrand.capabilities.log.EBLog;
 import com.google.gson.Gson;
+import com.guanhuan.steins.capabilities.log.EBLog;
 
 /**
  * <json公共解析库>

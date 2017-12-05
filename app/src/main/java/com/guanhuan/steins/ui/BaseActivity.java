@@ -47,4 +47,6 @@ public class BaseActivity extends AppCompatActivity {
             sCompositeSubscription.unsubscribe();
         }
     }
+
+
 }

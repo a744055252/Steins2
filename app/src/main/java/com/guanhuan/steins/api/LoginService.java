@@ -1,4 +1,4 @@
-package com.guanhuan.steins.Api;
+package com.guanhuan.steins.api;
 
 import com.guanhuan.steins.bean.model.ResultModel;
 

@@ -2,7 +2,8 @@ package com.guanhuan.steins.bridge.cache.sharePref;
 
 import android.content.Context;
 
-import com.focustech.electronicbrand.capabilities.cache.BaseSharedPreference;
+import com.guanhuan.steins.capabilities.cache.BaseSharedPreference;
+
 
 /**
  * <设置信息缓存>

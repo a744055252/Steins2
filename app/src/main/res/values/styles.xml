@@ -1,4 +1,5 @@
-<resources>
+<resources >
+
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -14,7 +15,6 @@
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
-        <item name="elevation">0dp</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
@@ -55,7 +55,7 @@
         <item name="tabIndicatorHeight">0dp</item>
         <item name="tabPaddingStart">12dp</item>
         <item name="tabPaddingEnd">12dp</item>
-        <item name="tabBackground">@color/blank</item>
+        <item name="tabBackground">@color/white</item>
         <item name="tabSelectedTextColor">?android:textColorPrimary</item>
     </style>
 

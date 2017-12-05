@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.guanhuan.steins.App;
 import com.guanhuan.steins.App1;
 import com.guanhuan.steins.R;
 import com.guanhuan.steins.config.Constants;
@@ -70,7 +71,7 @@ public class MainActivity extends BaseActivity
     private IntentFilter intentFilter;
 
     public MainActivity() {
-        loader = new PreferencesLoader(App1.getsContext());
+        loader = new PreferencesLoader(App.app);
     }
 
     @Override
@@ -188,7 +189,7 @@ public class MainActivity extends BaseActivity
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
-                    intent.setClass(MainActivity.this, LoginActivity.class);
+                    intent.setClass(MainActivity.this, com.guanhuan.steins.ui.personcenter.LoginActivity.class);
                     startActivity(intent);
                 }
             };
