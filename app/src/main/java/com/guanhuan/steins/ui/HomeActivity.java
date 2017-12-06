@@ -23,6 +23,11 @@ import android.widget.TextView;
 import com.guanhuan.steins.R;
 import com.guanhuan.steins.biz.personcenter.IHomeView;
 import com.guanhuan.steins.biz.personcenter.UserPresenter;
+import com.guanhuan.steins.bridge.BridgeFactory;
+import com.guanhuan.steins.bridge.Bridges;
+import com.guanhuan.steins.bridge.cache.sharePref.SharedPrefManager;
+import com.guanhuan.steins.bridge.cache.sharePref.SharedPrefUser;
+import com.guanhuan.steins.capabilities.cache.BaseSharedPreference;
 import com.guanhuan.steins.config.Constants;
 import com.guanhuan.steins.constant.Event;
 import com.guanhuan.steins.ui.base.BaseActivity;
@@ -59,6 +64,9 @@ public class HomeActivity extends BaseActivity implements IHomeView,NavigationVi
     private View headerLayout;
 
     private PreferencesLoader loader;
+
+    private SharedPrefManager spmanager = BridgeFactory.getBridge(Bridges.SHARED_PREFERENCE);
+    private BaseSharedPreference preference;
 
     private UserPresenter userPresenter;
 
@@ -192,25 +200,29 @@ public class HomeActivity extends BaseActivity implements IHomeView,NavigationVi
     public void loadUser() {
 
         //如果已经登陆则加载用户信息
-        String userName = loader.getString(Constants.LOGIN_USERNAME);
-        String userEmail = loader.getString(Constants.LOGIN_EMAIL);
-        if (userName != null && !userName.equals("")) {
-            Toasts.showShort("loadUser:" + userName + "_" + userEmail);
+//        String userName = loader.getString(Constants.LOGIN_USERNAME);
+//        String userEmail = loader.getString(Constants.LOGIN_EMAIL);
+        preference = spmanager.getSharedPref(SharedPrefManager.SharedPrefs.USER);
+        String userName = preference.getString(SharedPrefUser.USER_NAME, "");
+        String userEmail = preference.getString(SharedPrefUser.USER_EMAIL, "");
+        if (!userName.equals("")) {
             user_name.setText(userName);
             user_email.setText(userEmail);
         }
     }
 
     public void logout() {
+        drawer.closeDrawer(GravityCompat.START);
         new AlertDialog.Builder(HomeActivity.this).setTitle("系统提示")
                 .setMessage("是否退出登陆")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        loader.saveString(Constants.AUTHORIZATION, "");
-                        loader.saveString(Constants.LOGIN_USERNAME, "");
-                        loader.saveString(Constants.LOGIN_EMAIL, "");
-                        loader.saveString(Constants.LOGIN_IMAGE, "");
+                        preference = spmanager.getSharedPref(SharedPrefManager.SharedPrefs.USER);
+                        preference.saveString(SharedPrefUser.USER_TOKEN, "");
+                        preference.saveString(SharedPrefUser.USER_EMAIL, "");
+                        preference.saveString(SharedPrefUser.USER_NAME, "");
+                        preference.saveString(SharedPrefUser.USER_IMAGE, "");
                         user_name.setText("请登陆");
                         user_email.setText("");
                         Toasts.showShort("退出成功");

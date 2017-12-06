@@ -137,6 +137,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CreateIn
         EventBus.getDefault().unregister(this);
         if (presenter != null) {
             presenter.detachView(this);
+            //清除订阅
+            presenter.onStop();
         }
         //已发送的请求未取消
 

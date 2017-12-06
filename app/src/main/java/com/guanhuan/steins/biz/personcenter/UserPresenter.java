@@ -2,7 +2,6 @@ package com.guanhuan.steins.biz.personcenter;
 
 import android.util.Log;
 
-import com.guanhuan.steins.App;
 import com.guanhuan.steins.api.UserService;
 import com.guanhuan.steins.bean.entity.User;
 import com.guanhuan.steins.bean.model.ResultModel;
@@ -10,22 +9,21 @@ import com.guanhuan.steins.biz.BasePresenter;
 import com.guanhuan.steins.bridge.BridgeFactory;
 import com.guanhuan.steins.bridge.Bridges;
 import com.guanhuan.steins.bridge.cache.DB.DBManager;
+import com.guanhuan.steins.bridge.cache.sharePref.SharedPrefManager;
+import com.guanhuan.steins.bridge.cache.sharePref.SharedPrefUser;
 import com.guanhuan.steins.bridge.http.RetrofitServiceManager;
-import com.guanhuan.steins.config.Constants;
+import com.guanhuan.steins.capabilities.cache.BaseSharedPreference;
 import com.guanhuan.steins.http.DefaultObserver;
-import com.guanhuan.steins.util.PreferencesLoader;
 import com.litesuits.orm.db.assit.QueryBuilder;
 
 
 import java.util.List;
 
-import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Func1;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by guanhuan_li on 2017/12/5.
+ * 调用CompositeSubscription.add()将 Subscription 加入管理避免内存泄漏
  */
 
 public class UserPresenter extends BasePresenter<IHomeView> {
@@ -36,12 +34,10 @@ public class UserPresenter extends BasePresenter<IHomeView> {
 
     private RetrofitServiceManager manager = BridgeFactory.getBridge(Bridges.HTTP);
     private DBManager dbmanager = BridgeFactory.getBridge(Bridges.DATABASE);
-
-    private CompositeSubscription mCompositeSubscription;
+    private SharedPrefManager spmanager = BridgeFactory.getBridge(Bridges.SHARED_PREFERENCE);
 
     public UserPresenter(){
         userService = manager.create(UserService.class);
-        mCompositeSubscription = new CompositeSubscription();
     }
 
     public void getLoginUser(){
@@ -69,11 +65,16 @@ public class UserPresenter extends BasePresenter<IHomeView> {
                                 }
                                 dbmanager.getsDb().save(user);
 
-                                PreferencesLoader loader = new PreferencesLoader(App.app);
-                                if(user != null){
-                                    loader.saveString(Constants.LOGIN_USERNAME, user.userName);
-                                    loader.saveString(Constants.LOGIN_EMAIL, user.email);
-                                }
+//                                PreferencesLoader loader = new PreferencesLoader(App.app);
+//
+//                                if(user != null){
+//                                    loader.saveString(Constants.LOGIN_USERNAME, user.userName);
+//                                    loader.saveString(Constants.LOGIN_EMAIL, user.email);
+//                                }
+                                BaseSharedPreference userShared =
+                                        spmanager.getSharedPref(SharedPrefManager.SharedPrefs.USER);
+                                userShared.saveString(SharedPrefUser.USER_NAME, user.userName);
+                                userShared.saveString(SharedPrefUser.USER_EMAIL, user.email);
                                 //调用刷新,必须在主线程下调用ui
                                 mvpView.onSuccess();
                             }
@@ -83,11 +84,4 @@ public class UserPresenter extends BasePresenter<IHomeView> {
         mCompositeSubscription.add(s);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if(mCompositeSubscription != null){
-            mCompositeSubscription.unsubscribe();
-        }
-    }
 }

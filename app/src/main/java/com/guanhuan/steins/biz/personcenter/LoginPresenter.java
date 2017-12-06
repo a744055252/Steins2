@@ -11,7 +11,10 @@ import com.guanhuan.steins.biz.BasePresenter;
 import com.guanhuan.steins.bridge.BridgeFactory;
 import com.guanhuan.steins.bridge.Bridges;
 import com.guanhuan.steins.bridge.cache.DB.DBManager;
+import com.guanhuan.steins.bridge.cache.sharePref.SharedPrefManager;
+import com.guanhuan.steins.bridge.cache.sharePref.SharedPrefUser;
 import com.guanhuan.steins.bridge.http.RetrofitServiceManager;
+import com.guanhuan.steins.capabilities.cache.BaseSharedPreference;
 import com.guanhuan.steins.config.Constants;
 import com.guanhuan.steins.http.DefaultObserver;
 import com.guanhuan.steins.util.PreferencesLoader;
@@ -34,9 +37,10 @@ public class LoginPresenter extends BasePresenter<IUserLoginView> {
 
     private RetrofitServiceManager manager = BridgeFactory.getBridge(Bridges.HTTP);
     private DBManager dbmanager = BridgeFactory.getBridge(Bridges.DATABASE);
+    private SharedPrefManager spmanager = BridgeFactory.getBridge(Bridges.SHARED_PREFERENCE);
+    private BaseSharedPreference preference;
 
     private PreferencesLoader preferencesLoader;
-    private CompositeSubscription mCompositeSubscription;
 
     private static final String TAG = "LoginPresenter";
 
@@ -56,7 +60,9 @@ public class LoginPresenter extends BasePresenter<IUserLoginView> {
                             public void onSuccess(ResultModel<String> response) {
                                 String token = response.getContent();
                                 Log.i(TAG, "Token:"+token);
-                                preferencesLoader.saveString(Constants.AUTHORIZATION, token);
+//                                preferencesLoader.saveString(Constants.AUTHORIZATION, token);
+                                preference = spmanager.getSharedPref(SharedPrefManager.SharedPrefs.USER);
+                                preference.saveString(SharedPrefUser.USER_TOKEN, token);
                                 LiteOrm liteOrm = dbmanager.getsDb();
                                 List<User> userList = liteOrm.query(new QueryBuilder(User.class)
                                         .where("account = ?", new String[]{account})
@@ -86,9 +92,4 @@ public class LoginPresenter extends BasePresenter<IUserLoginView> {
         mCompositeSubscription.add(s);
     }
 
-    public void onStop() {
-        if(mCompositeSubscription != null){
-            mCompositeSubscription.unsubscribe();
-        }
-    }
 }

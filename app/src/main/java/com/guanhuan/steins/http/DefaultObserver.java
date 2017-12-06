@@ -34,6 +34,7 @@ public abstract class DefaultObserver<T extends ResultModel> implements Observer
 
     @Override
     public void onNext(T response) {
+        Log.i(TAG, "onNext:"+ response.toString());
         if (!response.isError()) {
             onSuccess(response);
         } else {

@@ -55,4 +55,10 @@ public class ResultModel<T> {
     }
 
     public boolean isError(){ return this.code != Constants.SUCCESS_CODE; }
+
+    @Override
+    public String toString() {
+        return "返回码:" + this.code + "\r\n消息:" + this.getMessage() +
+                "\r\n内容:" + this.getContent();
+    }
 }

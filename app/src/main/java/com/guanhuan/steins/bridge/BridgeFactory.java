@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.guanhuan.steins.bridge.cache.DB.DBManager;
 import com.guanhuan.steins.bridge.cache.localstorage.LocalFileStorageManager;
-import com.guanhuan.steins.bridge.cache.sharePref.EBSharedPrefManager;
+import com.guanhuan.steins.bridge.cache.sharePref.SharedPrefManager;
 import com.guanhuan.steins.bridge.http.RetrofitServiceManager;
 import com.guanhuan.steins.bridge.security.SecurityManager;
 
@@ -56,9 +56,9 @@ public class BridgeFactory {
      * 初始化SharedPreference管理类
      */
     private void initPreferenceManager() {
-        EBSharedPrefManager ebSharedPrefManager = new EBSharedPrefManager();
-        model.mBridges.put(Bridges.SHARED_PREFERENCE, ebSharedPrefManager);
-        BridgeLifeCycleSetKeeper.getInstance().trustBridgeLifeCycle(ebSharedPrefManager);
+        SharedPrefManager sharedPrefManager = new SharedPrefManager();
+        model.mBridges.put(Bridges.SHARED_PREFERENCE, sharedPrefManager);
+        BridgeLifeCycleSetKeeper.getInstance().trustBridgeLifeCycle(sharedPrefManager);
     }
 
     /**

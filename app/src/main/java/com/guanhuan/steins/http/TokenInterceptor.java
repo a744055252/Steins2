@@ -4,6 +4,11 @@ import android.util.Log;
 
 import com.guanhuan.steins.App;
 import com.guanhuan.steins.App1;
+import com.guanhuan.steins.bridge.BridgeFactory;
+import com.guanhuan.steins.bridge.Bridges;
+import com.guanhuan.steins.bridge.cache.sharePref.SharedPrefManager;
+import com.guanhuan.steins.bridge.cache.sharePref.SharedPrefUser;
+import com.guanhuan.steins.capabilities.cache.BaseSharedPreference;
 import com.guanhuan.steins.config.Constants;
 import com.guanhuan.steins.util.PreferencesLoader;
 
@@ -21,7 +26,10 @@ import okhttp3.Response;
 public class TokenInterceptor implements Interceptor{
 
     private static final String TAG = "TokenInterceptor";
-    
+    SharedPrefManager spmanager = BridgeFactory.getBridge(Bridges.SHARED_PREFERENCE);
+    BaseSharedPreference preference ;
+
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request oldRequest = chain.request();
@@ -37,8 +45,11 @@ public class TokenInterceptor implements Interceptor{
         requestBuilder.method(oldRequest.method(), oldRequest.body());
 
         //读取token
-        PreferencesLoader loader = new PreferencesLoader(App.app);
-        String token = loader.getString(Constants.AUTHORIZATION);
+//        PreferencesLoader loader = new PreferencesLoader(App.app);
+//        String token = loader.getString(Constants.AUTHORIZATION);
+        preference =
+                spmanager.getSharedPref(SharedPrefManager.SharedPrefs.USER);
+        String token = preference.getString(SharedPrefUser.USER_TOKEN, "");
 
         //添加公共参数Token,添加到header中
         if(token != null && !"".equals(token)) {
