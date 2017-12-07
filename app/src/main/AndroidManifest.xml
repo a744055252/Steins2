@@ -38,9 +38,6 @@
         <activity
             android:name=".ui.personcenter.LoginActivity"
             android:label="@string/title_activity_login" />
-        <activity
-            android:name=".ui.ACfunActivity"
-            android:label="@string/title_activity_acfun"/>
     </application>
 
 </manifest>

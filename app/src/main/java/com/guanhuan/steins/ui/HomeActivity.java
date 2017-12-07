@@ -8,6 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,6 +34,9 @@ import com.guanhuan.steins.capabilities.cache.BaseSharedPreference;
 import com.guanhuan.steins.config.Constants;
 import com.guanhuan.steins.constant.Event;
 import com.guanhuan.steins.ui.base.BaseActivity;
+import com.guanhuan.steins.ui.base.BaseFragment;
+import com.guanhuan.steins.ui.fragment.AcfunFragment;
+import com.guanhuan.steins.ui.fragment.BananaFragment;
 import com.guanhuan.steins.util.PreferencesLoader;
 import com.guanhuan.steins.util.Toasts;
 
@@ -62,6 +68,7 @@ public class HomeActivity extends BaseActivity implements IHomeView,NavigationVi
     private TextView user_name;
     private TextView user_email;
     private View headerLayout;
+    private BaseFragment currentFragment;
 
     private PreferencesLoader loader;
 
@@ -126,6 +133,7 @@ public class HomeActivity extends BaseActivity implements IHomeView,NavigationVi
             @Override
             public void onRefresh() {
                 Toasts.showShort("刷新");
+                currentFragment.refresh();
                 swipeRefresh.setRefreshing(false);
             }
         });
@@ -133,6 +141,8 @@ public class HomeActivity extends BaseActivity implements IHomeView,NavigationVi
 
     @Override
     public void initData() {
+        currentFragment = new AcfunFragment();
+        replaceFragment(currentFragment);
         loader = new PreferencesLoader(this);
         String token = loader.getString(Constants.AUTHORIZATION);
         Log.i(TAG, "iniNav_header: " + token);
@@ -152,9 +162,6 @@ public class HomeActivity extends BaseActivity implements IHomeView,NavigationVi
             case R.id.nav_camera:
                 break;
             case R.id.nav_gallery:
-                Intent intent = new Intent();
-                intent.setClass(HomeActivity.this, ACfunActivity.class);
-                startActivity(intent);
                 break;
             case R.id.nav_slideshow:
                 break;
@@ -255,4 +262,12 @@ public class HomeActivity extends BaseActivity implements IHomeView,NavigationVi
             startActivity(intent);
         }
     };
+
+    private void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_layout, fragment);
+        transaction.commit();
+        currentFragment = (BaseFragment)fragment;
+    }
 }

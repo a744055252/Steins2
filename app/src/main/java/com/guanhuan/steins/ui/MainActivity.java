@@ -151,7 +151,6 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.nav_gallery:
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this, ACfunActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_slideshow:
