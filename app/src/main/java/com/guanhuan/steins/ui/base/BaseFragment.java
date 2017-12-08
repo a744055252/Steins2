@@ -116,7 +116,4 @@ public abstract class BaseFragment extends Fragment implements CreateInit, IMvpV
         super.onDestroyView();
     }
 
-    /** 刷新数据 */
-    public abstract void refresh();
-
 }

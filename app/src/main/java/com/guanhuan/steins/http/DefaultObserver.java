@@ -30,7 +30,10 @@ public abstract class DefaultObserver<T extends ResultModel> implements Observer
     public DefaultObserver(){
     }
 
+    @Override
+    public void onCompleted() {
 
+    }
 
     @Override
     public void onNext(T response) {

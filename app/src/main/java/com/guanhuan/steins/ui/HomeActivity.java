@@ -12,8 +12,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -31,16 +31,21 @@ import com.guanhuan.steins.bridge.Bridges;
 import com.guanhuan.steins.bridge.cache.sharePref.SharedPrefManager;
 import com.guanhuan.steins.bridge.cache.sharePref.SharedPrefUser;
 import com.guanhuan.steins.capabilities.cache.BaseSharedPreference;
-import com.guanhuan.steins.config.Constants;
 import com.guanhuan.steins.constant.Event;
 import com.guanhuan.steins.ui.base.BaseActivity;
 import com.guanhuan.steins.ui.base.BaseFragment;
+import com.guanhuan.steins.ui.adapter.TitleFragmentAdapter;
 import com.guanhuan.steins.ui.fragment.AcfunFragment;
-import com.guanhuan.steins.ui.fragment.BananaFragment;
+import com.guanhuan.steins.ui.fragment.BilibiliFragment;
+import com.guanhuan.steins.ui.fragment.GuanchaFragment;
+import com.guanhuan.steins.ui.fragment.WumaoFragment;
 import com.guanhuan.steins.util.PreferencesLoader;
 import com.guanhuan.steins.util.Toasts;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,16 +58,20 @@ public class HomeActivity extends BaseActivity implements IHomeView,NavigationVi
 
     @BindView(R.id.toolbar1)
     Toolbar toolbar;
-    @BindView(R.id.tab)
-    TabLayout mTabLayout;
+//    @BindView(R.id.tab)
+//    TabLayout mTabLayout;
     @BindView(R.id.fab)
     FloatingActionButton fab;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout swipeRefresh;
+//    @BindView(R.id.swipe_refresh)
+//    SwipeRefreshLayout swipeRefresh;
+    @BindView(R.id.main_viewpager)
+    ViewPager main_viewpager;
+    @BindView(R.id.main_items)
+    TabLayout main_items;
 
     private ImageView user_image;
     private TextView user_name;
@@ -71,6 +80,9 @@ public class HomeActivity extends BaseActivity implements IHomeView,NavigationVi
     private BaseFragment currentFragment;
 
     private PreferencesLoader loader;
+    private List<BaseFragment> fragmentList;
+    private TitleFragmentAdapter adapter;
+    private String[] titles = {"ACFun", "BiliBili", "五毛网", "观察者"};
 
     private SharedPrefManager spmanager = BridgeFactory.getBridge(Bridges.SHARED_PREFERENCE);
     private BaseSharedPreference preference;
@@ -124,27 +136,27 @@ public class HomeActivity extends BaseActivity implements IHomeView,NavigationVi
         user_email = (TextView) headerLayout.findViewById(R.id.user_email);
     }
 
-    @Override
     public void initListeners() {
-        //刷新
-        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
-            @Override
-            public void onRefresh() {
-                Toasts.showShort("刷新");
-                currentFragment.refresh();
-                swipeRefresh.setRefreshing(false);
-            }
-        });
+//        //刷新
+//        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+//        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//
+//            @Override
+//            public void onRefresh() {
+//                Toasts.showShort("刷新");
+//                currentFragment.refresh();
+//                swipeRefresh.setRefreshing(false);
+//            }
+//        });
     }
 
     @Override
     public void initData() {
-        currentFragment = new AcfunFragment();
-        replaceFragment(currentFragment);
-        loader = new PreferencesLoader(this);
-        String token = loader.getString(Constants.AUTHORIZATION);
+//        currentFragment = new AcfunFragment();
+//        replaceFragment(currentFragment);
+        initTitle();
+        preference = spmanager.getSharedPref(SharedPrefManager.SharedPrefs.USER);
+        String token = preference.getString(SharedPrefUser.USER_TOKEN, "");
         Log.i(TAG, "iniNav_header: " + token);
         if (token == null || token.equals("")) {
             user_image.setOnClickListener(listener);
@@ -153,6 +165,18 @@ public class HomeActivity extends BaseActivity implements IHomeView,NavigationVi
             loadUser();
         }
     }
+
+    private void initTitle(){
+        fragmentList = new ArrayList<>(4);
+        fragmentList.add(new AcfunFragment());
+        fragmentList.add(new BilibiliFragment());
+        fragmentList.add(new WumaoFragment());
+        fragmentList.add(new GuanchaFragment());
+        adapter = new TitleFragmentAdapter(getSupportFragmentManager(), titles, fragmentList);
+        main_viewpager.setAdapter(adapter);
+        main_items.setupWithViewPager(main_viewpager);
+    }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

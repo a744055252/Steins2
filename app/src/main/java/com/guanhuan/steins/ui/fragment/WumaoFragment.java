@@ -14,13 +14,13 @@ import com.guanhuan.steins.util.Toasts;
  * Created by guanhuan_li on 2017/12/7.
  */
 
-public class ArticleFragment extends BaseFragment {
+public class WumaoFragment extends BaseFragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.article_fragment, container, false);
+        View view = inflater.inflate(R.layout.wumao_fragment, container, false);
         return view;
     }
 

@@ -3,12 +3,9 @@ package com.guanhuan.steins.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +15,8 @@ import android.widget.TextView;
 import com.guanhuan.steins.R;
 import com.guanhuan.steins.ui.base.BaseActivity;
 import com.guanhuan.steins.ui.base.BaseFragment;
+import com.guanhuan.steins.ui.adapter.TitleFragmentAdapter;
+import com.guanhuan.steins.util.ToastUtil;
 import com.guanhuan.steins.util.Toasts;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ import java.util.List;
  * Created by guanhuan_li on 2017/12/7.
  */
 
-public class AcfunFragment extends BaseFragment {
+public class AcfunFragment extends BaseFragment implements ViewPager.OnPageChangeListener{
 
     private View view;
     private BaseFragment currentFragment;
@@ -35,8 +34,9 @@ public class AcfunFragment extends BaseFragment {
     private TabLayout tabLayout;
 
     private List<BaseFragment> fragmentList;
+    private String[] title = {"香蕉榜", "文章区"};
 
-    AcfunFragmentAdapter adapter;
+    TitleFragmentAdapter adapter;
 
     private BaseActivity context;
 
@@ -51,6 +51,8 @@ public class AcfunFragment extends BaseFragment {
         return view;
     }
 
+
+
     @Override
     public void initViews() {
         super.initViews();
@@ -61,8 +63,7 @@ public class AcfunFragment extends BaseFragment {
     @Override
     public void initListeners() {
         super.initListeners();
-//        bananaItem.setOnClickListener(this);
-//        articleItem.setOnClickListener(this);
+        viewpager.addOnPageChangeListener(this);
     }
 
     @Override
@@ -74,9 +75,9 @@ public class AcfunFragment extends BaseFragment {
     public void initData() {
         super.initData();
         fragmentList = new ArrayList<>(2);
-        fragmentList.add(new ArticleFragment());
         fragmentList.add(new BananaFragment());
-        adapter = new AcfunFragmentAdapter(getChildFragmentManager(), fragmentList);
+        fragmentList.add(new ArticleFragment());
+        adapter = new TitleFragmentAdapter(getChildFragmentManager(), title, fragmentList);
         viewpager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewpager);
     }
@@ -87,12 +88,6 @@ public class AcfunFragment extends BaseFragment {
         this.context = (BaseActivity)context;
     }
 
-    @Override
-    public void refresh() {
-        TextView textView = (TextView)view.findViewById(R.id.banana_text);
-        Toasts.showShort("change");
-        textView.setText("change textview");
-    }
 
 //    private void replaceFragment(Fragment fragment){
 //        FragmentManager fragmentManager = getChildFragmentManager();
@@ -114,4 +109,21 @@ public class AcfunFragment extends BaseFragment {
         }
     }
 
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        TabLayout main_tab = (TabLayout) context.findViewById(R.id.main_items);
+//        main_tab.
+        Log.i(TAG, "onPageScrolled: "+position+"_"+positionOffset+"_"+positionOffsetPixels);
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }

@@ -11,13 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
     </android.support.v4.view.ViewPager>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#000"/>
 
 
     <android.support.design.widget.AppBarLayout
@@ -25,8 +20,9 @@
         android:layout_height="wrap_content">
         <android.support.design.widget.TabLayout
             android:id="@+id/acfun_items"
+            app:layout_scrollFlags="scroll"
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="45dp" />
     </android.support.design.widget.AppBarLayout>
 
 </LinearLayout>

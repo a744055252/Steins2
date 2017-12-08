@@ -115,6 +115,5 @@ public class LoginActivity extends BaseActivity implements IUserLoginView {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mUserLoginPresenter.onStop();
     }
 }

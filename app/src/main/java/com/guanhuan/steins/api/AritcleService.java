@@ -12,4 +12,7 @@ import rx.Observable;
 public interface AritcleService {
     @GET("ACMsg/allAritcle")
     Observable<ResultModel<Map<String, List<ACMsg>>>> getAllAritcle() ;
+
+    @GET("ACMsg/banana")
+    Observable<ResultModel<List<ACMsg>>> getBanana();
 }

@@ -1,4 +1,4 @@
-package com.guanhuan.steins.ui.fragment;
+package com.guanhuan.steins.ui.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,14 +12,15 @@ import java.util.List;
  * Created by guanhuan_li on 2017/12/7.
  */
 
-public class AcfunFragmentAdapter extends FragmentPagerAdapter {
+public class TitleFragmentAdapter extends FragmentPagerAdapter {
 
-    private String[] title = {"香蕉榜", "文章区"};
+    private String[] title;
 
     private List<BaseFragment> fragmentList;
 
-    public AcfunFragmentAdapter(FragmentManager fm, List<BaseFragment> fragmentList) {
+    public TitleFragmentAdapter(FragmentManager fm, String[] title, List<BaseFragment> fragmentList) {
         super(fm);
+        this.title = title;
         this.fragmentList = fragmentList;
     }
 
