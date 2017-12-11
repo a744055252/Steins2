@@ -26,7 +26,7 @@ import java.util.List;
  * Created by guanhuan_li on 2017/12/7.
  */
 
-public class AcfunFragment extends BaseFragment implements ViewPager.OnPageChangeListener{
+public class AcfunFragment extends BaseFragment {
 
     private View view;
     private BaseFragment currentFragment;
@@ -63,7 +63,6 @@ public class AcfunFragment extends BaseFragment implements ViewPager.OnPageChang
     @Override
     public void initListeners() {
         super.initListeners();
-        viewpager.addOnPageChangeListener(this);
     }
 
     @Override
@@ -110,20 +109,4 @@ public class AcfunFragment extends BaseFragment implements ViewPager.OnPageChang
     }
 
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        TabLayout main_tab = (TabLayout) context.findViewById(R.id.main_items);
-//        main_tab.
-        Log.i(TAG, "onPageScrolled: "+position+"_"+positionOffset+"_"+positionOffsetPixels);
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
 }

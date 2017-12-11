@@ -1,8 +1,14 @@
 package com.guanhuan.steins.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.guanhuan.steins.R;
 import com.guanhuan.steins.bean.entity.ACMsg;
+import com.guanhuan.steins.ui.base.CardActivity;
 
 import java.util.List;
 
@@ -39,17 +46,18 @@ public class BananaAdapter extends RecyclerView.Adapter<BananaAdapter.ViewHolder
         View view= LayoutInflater.from(mContext).inflate(R.layout.card_view_main,parent,false);
 
         final ViewHolder holder = new ViewHolder(view);
-//        holder.cardView.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                int position = holder.getAdapterPosition();
-//                ACMsg acmsg = banana.get(position);
-//                Intent intent = new Intent(mContext, FruitActivity.class);
-//                intent.putExtra(FruitActivity.FRUIT_NAME, fruit.getName());
-//                intent.putExtra(FruitActivity.FRUIT_IMAGE_ID, fruit.getImageId());
-//                mContext.startActivity(intent);
-//            }
-//        });
+        holder.cardView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                ACMsg acmsg = banana.get(position);
+                Intent intent = new Intent(mContext, CardActivity.class);
+                intent.putExtra(CardActivity.CARD_NAME, acmsg.title);
+                intent.putExtra(CardActivity.CARD_IMAGE_ID, acmsg.imageUrl);
+                intent.putExtra(CardActivity.CARD_CONTEXT,acmsg.acUrl);
+                mContext.startActivity(intent);
+            }
+        });
         return holder;
     }
 
@@ -75,11 +83,13 @@ public class BananaAdapter extends RecyclerView.Adapter<BananaAdapter.ViewHolder
         CardView cardView;
         ImageView imageView;
         TextView textView;
+        @RequiresApi(api = Build.VERSION_CODES.M)
         public ViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView;
             imageView = (ImageView) itemView.findViewById(R.id.card_image);
             textView = (TextView) itemView.findViewById(R.id.card_name);
+            textView.setTextAppearance(R.style.TextAppearance_AppCompat_Body1);
         }
     }
 }

@@ -35,7 +35,7 @@ public class BananaPresenter extends BasePresenter<IAdapterView> {
 
     public void getBanana(){
         mvpView.showLoading();
-        Subscription s = observe(aritcleService.getBanana())
+        Subscription s = observe(aritcleService.getBanana(true))
                 .subscribe(new DefaultObserver<ResultModel<List<ACMsg>>>() {
                     @Override
                     public void onSuccess(ResultModel<List<ACMsg>> response) {

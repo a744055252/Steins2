@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.guanhuan.steins.ui.HomeActivity"
     >
 
@@ -15,7 +14,6 @@
         android:id="@+id/main_coordinator"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="vertical"
         >
 
         <android.support.design.widget.AppBarLayout
@@ -29,17 +27,12 @@
                 android:layout_height="wrap_content" />
         </android.support.design.widget.AppBarLayout>
 
-        <LinearLayout
+        <android.support.v4.view.ViewPager
+            android:id="@+id/main_viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
-            <android.support.v4.view.ViewPager
-                android:id="@+id/main_viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </android.support.v4.view.ViewPager>
-        </LinearLayout>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        </android.support.v4.view.ViewPager>
     </android.support.design.widget.CoordinatorLayout>
 
     <!--<android.support.v4.view.ViewPager-->

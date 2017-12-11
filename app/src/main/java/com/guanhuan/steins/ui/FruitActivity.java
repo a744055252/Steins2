@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 public class FruitActivity extends AppCompatActivity {
     public static final String FRUIT_NAME = "fruit_name";
     public static final String FRUIT_IMAGE_ID = "fruit_image_id";
-    @BindView(R.id.fruit_image_view)
+    @BindView(R.id.card_image_view)
     ImageView fruitImageView;
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
@@ -33,7 +33,7 @@ public class FruitActivity extends AppCompatActivity {
     AppBarLayout appBar;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.fruit_content_text)
+    @BindView(R.id.card_content_text)
     TextView fruitContentText;
 
     @Override
